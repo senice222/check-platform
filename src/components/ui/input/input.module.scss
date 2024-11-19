@@ -1,0 +1,47 @@
+.inputGroup {
+   margin-bottom: 15px;
+   text-align: left;
+
+   .inputWrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .input {
+         width: 100%;
+         height: 44px;
+         padding: 0 12px;
+         border: 1px solid #DEE0E3;
+         box-shadow: 0px 1px 2px 0px #14151A0D;
+         font-weight: 400;
+         font-size: 14px;
+         border-radius: 12px;
+         outline: none;
+         color: #344054;
+         &::placeholder {
+           color: #0D112666;
+         }
+     }
+
+      .icon {
+         position: absolute;
+         right: 10px; // Расположение иконки справа
+         top: 60%;
+         transform: translateY(-50%);
+         cursor: pointer;
+
+         img {
+           width: 20px;
+           height: 20px;
+         }
+       }
+   }
+   .label {
+       display: block;
+       margin-bottom: 5px;
+       font-weight: bold;
+       color: #344054;
+       font-weight: 500;
+       font-size: 14px;
+   }
+}

@@ -1,0 +1,102 @@
+.container {
+   width: 100%;
+   margin-top: 10px;
+   border-radius: 10px;
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search {
+   width: 100%;
+   padding: 10px;
+   border: 1px solid #dee0e3;
+   border-bottom: none; /* Убираем нижнюю границу */
+   border-radius: 5px 5px 0 0; /* Закругления только сверху */
+   font-size: 16px;
+   outline: none;
+}
+
+.table {
+   width: 100%;
+   border-collapse: collapse;
+   border: 1px solid #dee0e3;
+   th,
+   td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #f7f7f8;
+   }
+
+   th {
+      font-weight: 400;
+      color: #0F132499;
+      background-color: #f8f8f8;
+   }
+
+   td {
+      color: #333;
+
+      &:last-child {
+         font-weight: bold;
+      }
+   }
+
+   .status {
+      font-weight: bold;
+      border-radius: 5px;
+      padding: 5px 10px;
+
+      &::after {
+         content: attr(data-status);
+      }
+
+      &.Создана {
+         background-color: #5dbd5d;
+      }
+
+      &.Выдана {
+         background-color: #f39c12;
+      }
+   }
+}
+.companyDiv {
+   display: flex;
+   flex-direction: column;
+   .companyName {
+      color: #924FE8;
+      text-decoration: underline;
+      font-weight: 500;
+      font-size: 14px;
+   }
+   .inn {
+      color: #0F132499;
+      font-weight: 400;
+      font-size: 12px;
+   }
+   .sellerName {
+      color: #AE590A;
+      text-decoration: underline;
+      font-weight: 500;
+      font-size: 14px;
+   }
+   .checks {
+      color: #14151A;
+      font-weight: 500;
+      font-size: 14px;
+   }
+}
+.clientDiv {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   .clientName {
+      color: #924FE8;
+      text-decoration: underline;
+      font-weight: 500;
+      font-size: 14px;
+   }
+}
+.sum {
+   color: #14151A;
+   font-size: 14px;;
+   font-weight: 500;
+}

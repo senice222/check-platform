@@ -1,0 +1,196 @@
+.comments {
+  width: 100%;
+  height: 290px;
+  border: 1px solid #dee0e3;
+  border-radius: 16px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  .titleDiv {
+    h2 {
+      color: #14151a;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    p {
+      margin-top: 5px;
+      color: rgba(15, 19, 36, 0.6);
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+  .nothingFound {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 80px;
+    p {
+      margin-top: 4px;
+      color: #14151a;
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+  .inputContainer {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    user-select: none;
+    justify-content: space-between;
+    align-items: flex-end;
+    .inputDiv {
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      width: 96%;
+      border: 1px solid #dee0e3;
+      height: 40px;
+      input {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        width: 97%;
+        font-size: 14px;
+      }
+      .send {
+        cursor: pointer;
+      }
+    }
+  }
+  .attachDiv {
+    border: 1px solid #dee0e3;
+    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.applicationInfo {
+  .title {
+    margin-top: 20px;
+    color: #14151a;
+    font-weight: 600;
+    font-size: 24px;
+  }
+  .infoList {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    .infoCard {
+      width: 370px;
+      flex-grow: 1;
+      height: 184px;
+      padding: 16px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #dee0e3;
+      h2 {
+        color: #0d112666;
+        font-weight: 500;
+        font-size: 16px;
+        // margin-bottom: 15px;
+      }
+      .infoItem {
+        p {
+          color: #0f132499;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+        }
+        h3 {
+          color: #741de2;
+          font-weight: 500;
+          font-size: 14px;
+          text-decoration: underline;
+        }
+        .link {
+          margin-top: 4px;
+          display: flex;
+          cursor: pointer;
+          align-items: center;
+          svg {
+            margin-right: 5px;
+          }
+        }
+        .none {
+            cursor: text;
+          h3 {
+            color: #14151a;
+            text-decoration: none;
+          }
+        }
+
+        .elit {
+          h3 {
+            color: #ae590a !important;
+          }
+          svg {
+            path {
+              fill: #ae590a !important;
+            }
+          }
+        }
+        .elitMark {
+          margin-left: 5px;
+          padding: 3px 6px;
+          background-color: #fdead8;
+          border-radius: 6px;
+          color: #ae590a;
+        }
+      }
+    }
+  }
+}
+
+.checks {
+    width: 100%;
+    margin-top: 25px;
+    .titleDiv {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .checkInfoList {
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        .item {
+            flex-grow: 1;
+            width: 266px;
+            padding: 16px;
+            background-color: #F7F7F8;
+            border: 1px solid #DEE0E3;
+            border-radius: 10px;
+            p {
+                color: #0F132499;
+                font-size: 14px;
+                font-weight: 500;
+            }
+            h4 {
+                margin-top: 10px;
+                color: #14151A;
+                font-weight: 500;
+                font-size: 14px;
+            }
+        }
+    }
+}
+.title {
+    // margin-top: 20px;
+    color: #14151a;
+    font-weight: 600;
+    font-size: 24px;
+  }

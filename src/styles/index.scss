@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 * {
    margin: 0;
@@ -7,5 +7,48 @@
    font-family: "Inter", sans-serif;
 }
 body {
-   background-color: #F7F7F8;
+   background-color: #f7f7f8;
+}
+
+.rdrInRange {
+   background-color: #F5F6F7 !important; /* Серый фон */
+   color: #000000 !important; /* Черный текст */
+}
+
+.rdrStartEdge {
+   border-top-left-radius: 8px !important;  /* Левый верхний угол */
+   border-bottom-left-radius: 8px !important;
+}
+.rdrEndEdge {
+   border-top-right-radius: 8px !important;  /* Левый верхний угол */
+   border-bottom-right-radius: 8px !important;
+}
+.rdrStartEdge,
+.rdrEndEdge {
+   border: 1px solid #924fe8 !important; /* Фиолетовый бордер */
+   background-color: white !important;
+   &:hover {
+      background-color: #ececec !important; /* Легкий фон при наведении */
+   }
+}
+.rdrDayNumber {
+   span {
+      color: #1d2429 !important
+   }
+}
+.rdrInRange:hover {
+   background-color: #924fe8 !important; /* Цвет фона остается прежним */
+   color: #fff !important; /* Цвет текста остается белым */
+}
+
+/* Убираем hover эффект для начальной и конечной даты */
+.rdrDayHovered:hover,
+.rdrDayHovered:hover,
+.rdrDayHovered:hover {
+   pointer-events: none !important; /* Отключаем hover, убираем все события наведения */
+}
+.rdrDayHovered {
+   // pointer-events: none !important; /* Отключаем наведение */
+   // background-color: black !important; /* Цвет фона */
+   // border-radius: 12px !important; /* Применяем border-radius */
 }

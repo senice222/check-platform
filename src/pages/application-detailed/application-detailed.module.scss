@@ -1,10 +1,14 @@
 .comments {
+  transition: 0.3s;
   width: 100%;
+  overflow-y: hidden;
   height: 290px;
+  pointer-events: all;
   border: 1px solid #dee0e3;
   border-radius: 16px;
   margin-top: 30px;
   display: flex;
+  opacity: 1;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
@@ -72,6 +76,14 @@
     align-items: center;
   }
 }
+.hiddenComments {
+  pointer-events: none;
+  margin-top: 0;
+  height: 0 !important;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
 .applicationInfo {
   .title {
@@ -87,8 +99,9 @@
     justify-content: space-between;
     .infoCard {
       width: 370px;
-      flex-grow: 1;
       height: 184px;
+      flex-grow: 1;
+      transition: 0.2s;
       padding: 16px;
       border-radius: 10px;
       display: flex;
@@ -117,14 +130,19 @@
         .link {
           margin-top: 4px;
           display: flex;
+          display: flex;
           cursor: pointer;
           align-items: center;
           svg {
             margin-right: 5px;
           }
+          .editInput {
+            width: 100%;
+            margin-top: 2px;
+          }
         }
         .none {
-            cursor: text;
+          cursor: text;
           h3 {
             color: #14151a;
             text-decoration: none;
@@ -150,47 +168,50 @@
         }
       }
     }
+    .editingInfoCard {
+      height: 232px !important;
+    }
   }
 }
 
 .checks {
+  width: 100%;
+  margin-top: 25px;
+  .titleDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .checkInfoList {
+    margin-top: 20px;
     width: 100%;
-    margin-top: 25px;
-    .titleDiv {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    .item {
+      flex-grow: 1;
+      width: 266px;
+      padding: 16px;
+      background-color: #f7f7f8;
+      border: 1px solid #dee0e3;
+      border-radius: 10px;
+      p {
+        color: #0f132499;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      h4 {
+        margin-top: 10px;
+        color: #14151a;
+        font-weight: 500;
+        font-size: 14px;
+      }
     }
-    .checkInfoList {
-        margin-top: 20px;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        .item {
-            flex-grow: 1;
-            width: 266px;
-            padding: 16px;
-            background-color: #F7F7F8;
-            border: 1px solid #DEE0E3;
-            border-radius: 10px;
-            p {
-                color: #0F132499;
-                font-size: 14px;
-                font-weight: 500;
-            }
-            h4 {
-                margin-top: 10px;
-                color: #14151A;
-                font-weight: 500;
-                font-size: 14px;
-            }
-        }
-    }
+  }
 }
 .title {
-    // margin-top: 20px;
-    color: #14151a;
-    font-weight: 600;
-    font-size: 24px;
-  }
+  // margin-top: 20px;
+  color: #14151a;
+  font-weight: 600;
+  font-size: 24px;
+}

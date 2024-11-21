@@ -1,0 +1,21 @@
+.editingBar {
+    width: 100%;
+    height: 0;
+    background-color: #FEF4EC;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    overflow-y: hidden;
+    transition: .2s;
+    border-radius: 10px;
+    gap: 5px;
+    margin-bottom: 20px;
+    p {
+        font-weight: 500;
+        font-size: 14px;
+        color: #14151A;
+    }
+}
+.active {
+    height: 52px !important;
+}

@@ -1,0 +1,118 @@
+.dateSelector {
+   position: relative;
+
+   .trigger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 32px;
+      font-size: 14px;
+      gap: 2px;
+      padding: 10px 8px;
+      font-weight: 500;
+      background-color: white;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      border-radius: 5px;
+   }
+   .active {
+      opacity: 1 !important;
+      pointer-events: all !important;
+
+   }
+   .popover {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      top: 40px;
+      left: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      transition: 0.3s;
+      z-index: 1000;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+
+      .header {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 10px;
+         div {
+            display: flex;
+            gap: 20px;
+         }
+         span {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+         }
+         button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+         }
+      }
+
+      .days {
+         display: grid;
+         grid-template-columns: repeat(7, 1fr);
+         // gap: 0px;
+         row-gap: 8px;
+         .dayLabel {
+            font-weight: bold;
+            text-align: center;
+         }
+
+         .blank {
+            height: 30px;
+         }
+
+         .day {
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+
+            &.selected {
+              color: white;
+              cursor: default; /* Убираем "указатель" для выбранных */
+            }
+
+            &.inRange {
+              background-color: #F5F6F7
+            }
+
+            &.firstSelected {
+              border: 1px solid #924fe8;
+              border-top-left-radius: 8px;
+              border-bottom-left-radius: 8px;
+              color: black;
+            }
+
+            &.lastSelected {
+              border: 1px solid #924fe8;
+              border-top-right-radius: 8px;
+              border-bottom-right-radius: 8px;
+              color: black;
+            }
+
+            /* Только для невыбранных ячеек */
+            &:not(.selected):hover {
+               border: 1px solid #924fe8;
+               border-top-left-radius: 8px;
+               border-bottom-left-radius: 8px;
+            }
+          }
+
+      }
+   }
+}

@@ -1,0 +1,44 @@
+.ChangingStatus {
+  margin-left: -70px;
+  margin-top: 10px;
+  position: absolute;
+  width: 232px;
+  height: 130px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+
+  pointer-events: all;
+  border: 1px solid #dee0e3;
+  border-radius: 12px;
+  padding: 4px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  // Состояние при закрытии
+  &.closed {
+    opacity: 0;
+    pointer-events: none; // Чтобы нельзя было взаимодействовать
+  }
+
+  // Состояние при открытии
+  &.opened {
+    opacity: 1;
+  }
+
+  .item {
+    cursor: pointer;
+    display: flex;
+    &:hover {
+      background-color: #0A0F290A;
+    }
+    border-radius: 6px;
+    align-items: center;
+    padding: 8px;
+    gap: 4px;
+
+    .status {
+      margin-left: 6px;
+    }
+  }
+}

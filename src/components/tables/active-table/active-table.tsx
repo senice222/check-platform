@@ -1,5 +1,5 @@
 import styles from "./active-table.module.scss";
-import { ClientAvatar } from "../../svgs/svgs";
+import { ClientAvatar, SearchIcon } from "../../svgs/svgs";
 
 const ActiveTable = () => {
    const data = [
@@ -9,7 +9,12 @@ const ActiveTable = () => {
 
    return (
       <div className={styles.container}>
-         <input className={styles.search} type="text" placeholder="Поиск по заявкам" />
+         <div className={styles.searchWrapper}>
+            <span className={styles.icon}>
+               <SearchIcon />
+            </span>
+            <input className={styles.search} type="text" placeholder="Поиск по заявкам" />
+         </div>
          <table className={styles.table}>
             <thead>
                <tr>

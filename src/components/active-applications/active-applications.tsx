@@ -1,3 +1,4 @@
+import SelectGroup from '../select-group/select-group'
 import { DownloadSvg } from '../svgs/svgs'
 import ActiveTable from '../tables/active-table/active-table'
 import Button from '../ui/button/button'
@@ -17,6 +18,7 @@ const ActiveApplications = () => {
                   styleLabel={{ fontSize: 14, fontWeight: 500 }}
                />
             </div>
+            <SelectGroup />
             <ActiveTable />
          </div>
       </div>

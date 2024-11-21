@@ -7,11 +7,13 @@ interface InputProps {
    error?: string
    value?: string
    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-   icon?: any
+   icon?: any;
+   disabled?: boolean
    toggleType?: boolean
+   noMargin?: boolean
 }
 
-const Input = ({ label, error, value, onChange, placeholder, icon, toggleType }: InputProps) => {
+const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, noMargin, disabled }: InputProps) => {
    const [inputValue, setInputValue] = useState(value)
    const [inputType, setInputType] = useState('text')
 
@@ -27,10 +29,11 @@ const Input = ({ label, error, value, onChange, placeholder, icon, toggleType }:
    }
 
    return (
-      <div className={style.inputGroup}>
+      <div className={style.inputGroup} style={noMargin ? {marginBottom: 0, marginTop: '0px'} : {}}>
          {label && <label className={style.label}>{label}</label>}
          <div className={style.inputWrapper}>
             <input
+            disabled={disabled}
                type={inputType}
                placeholder={placeholder}
                className={style.input}

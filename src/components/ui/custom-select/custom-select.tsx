@@ -9,14 +9,14 @@ const options = [
 interface CompanyI {
   name: string;
   inn: string;
-  type: "elit" | "standart";
+  type: string;
 }
 interface SelectProps {
-  onChange: (name: string) => void;
+  onChange: (value: CompanyI) => void;
   companies: CompanyI[];
 }
 
-const CustomSelect = () => {
+const CustomSelect : React.FC<SelectProps> = () => {
   return (
     <Select
       onChange={(name) => {

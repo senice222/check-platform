@@ -36,6 +36,7 @@ const ApplicationDetailed = () => {
   const [buyerCompanyName, setbuyerCompanyName] = useState("ООО “КОМПАНИЯ 1”");
   const [buyerInn, setBuyerInn] = useState("134841293138");
   const [currentCompany, setCurrentCompany] = useState(companies[0])
+
   return (
     <div>
       <IsEditingBar isEditing={editing} />
@@ -120,7 +121,7 @@ const ApplicationDetailed = () => {
               <p>Компания</p>
               <div className={`${s.link} ${s.elit}`}>
                 {editing ? (
-                  <CustomSelect companies={companies}/>
+                  <CustomSelect onChange={setCurrentCompany} companies={companies}/>
                 ) : (
                   <>
                     <h3>ООО "Инновации 2023"</h3>

@@ -10,6 +10,7 @@ import {
 import s from "./page-title.module.scss";
 import Button from "../button/button";
 import ChangingStatus from "../../changing-status/changing-status";
+import CancelApplication from "../../modals/cancel-application/cancel-application";
 
 
 interface PageTitleProps {
@@ -68,9 +69,10 @@ const PageTitle: FC<PageTitleProps> = ({
   noRightBtns,
   setStatuses,
   editing,
-  setEditing, 
+  setEditing,
 }) => {
   const [statusesOpened, setStatusesOpened] = useState(false);
+  const [canceling, setCanceling] = useState(false);
   const statusDisplay = () => {
     if (statuses) {
       return (
@@ -86,6 +88,8 @@ const PageTitle: FC<PageTitleProps> = ({
     }
   }
   return (
+    <>
+    <CancelApplication isOpened={canceling} setOpen={setCanceling} setEditing={() => setEditing && setEditing(false)}/>
     <div className={s.pageTitle}>
       <div className={s.globalLeft}>
         <div className={s.backArrow}>
@@ -116,25 +120,36 @@ const PageTitle: FC<PageTitleProps> = ({
       {noRightBtns ? null : (
         <div className={s.rightBtns}>
           <div className={s.statusesBtnDiv}>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                setStatusesOpened((prev) => !prev);
-              }}
+            {
+              editing ? <Button
+              onClick={() => setCanceling(true)}
+
               variant={"white"}
               icon={<ChangeStatus />}
-              label="Изменить статус"
-              style={{ height: "32px", width: "162px" }}
+              label="Отмена"
+              style={{ height: "32px", width: "100px" }}
               styleLabel={{ fontSize: "14px" }}
-            />
-            {statuses && setStatuses ? (
-              <ChangingStatus
-                statuses={statuses}
-                setStatuses={setStatuses}
-                isOpened={statusesOpened}
-                setOpened={() => setStatusesOpened((prev) => !prev)}
-              />
-            ) : null}
+            />: <>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setStatusesOpened((prev) => !prev);
+                  }}
+                  variant={"white"}
+                  icon={<ChangeStatus />}
+                  label="Изменить статус"
+                  style={{ height: "32px", width: "162px" }}
+                  styleLabel={{ fontSize: "14px" }}
+                />
+                {statuses && setStatuses ? (
+                  <ChangingStatus
+                    statuses={statuses}
+                    setStatuses={setStatuses}
+                    isOpened={statusesOpened}
+                    setOpened={() => setStatusesOpened((prev) => !prev)}
+                  />
+                ) : null}</>
+            }
           </div>
           {editing ? <Button
             variant={"purple"}
@@ -145,7 +160,11 @@ const PageTitle: FC<PageTitleProps> = ({
             styleLabel={{ fontSize: "14px" }}
           /> : <Button
             variant={"white"}
-            onClick={() => setEditing(true)}
+            onClick={() => {
+              if (setEditing) {
+                setEditing(true)
+              }
+            }}
             icon={<EditSvg />}
             label="Редактировать"
             style={{ height: "32px", width: "150px" }}
@@ -154,6 +173,7 @@ const PageTitle: FC<PageTitleProps> = ({
         </div>
       )}
     </div>
+    </>
   );
 };
 

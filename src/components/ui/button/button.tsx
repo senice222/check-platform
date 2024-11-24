@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './button.module.scss';
 
 interface ButtonProps {
-  onClick?: () => void;
+  onClick?: (e : React.MouseEvent) => void;
   label: string;
   disabled?: boolean;
   style?: React.CSSProperties;

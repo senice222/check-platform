@@ -16,7 +16,7 @@ interface PageTitleProps {
   setStatuses?: (statuses: string[]) => void; // 'сreated' | 'issued' | 'client_paid' | 'us_paid';
   date: string; // 31/08/24
   name: string;
-  editing?:boolean;
+  editing?: boolean;
   setEditing?: (value: boolean) => void;
   noRightBtns?: boolean;
 }
@@ -45,6 +45,12 @@ export const getElement = (status: string, bordered?: boolean) => {
     return (
       <div className={`${s.status1} ${s.green} ${borderClass}`} key={status}>
         <p>Оплачено нами</p>
+      </div>
+    );
+  } else if (status === "elit") {
+    return (
+      <div className={`${s.status1} ${s.elit} ${borderClass}`} key={status}>
+        <p>Элитная</p>
       </div>
     );
   } else {

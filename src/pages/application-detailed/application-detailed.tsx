@@ -121,7 +121,7 @@ const ApplicationDetailed = () => {
               <p>Компания</p>
               <div className={`${s.link} ${s.elit}`}>
                 {editing ? (
-                  <CustomSelect onChange={setCurrentCompany} companies={companies}/>
+                  <CustomSelect onChange={setCurrentCompany} defaultValue={currentCompany} companies={companies}/>
                 ) : (
                   <>
                     <h3>ООО "Инновации 2023"</h3>

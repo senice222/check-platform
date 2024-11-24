@@ -1,0 +1,36 @@
+.selectItem {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    p {
+        color: #14151A !important;
+        font-weight: 400 !important;
+        font-size: 14px !important;
+    }
+}
+
+.status1 {
+    border-radius: 8px;
+    // padding: 4px 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 6px;
+    height: 20px;
+
+    p {
+        color: #14151A !important;
+        font-weight: 500;
+        font-size: 12px;
+    }
+}
+
+.elit {
+    background-color: #FDEAD8 !important;
+
+    p {
+        color: #AE590A !important;
+    }
+}

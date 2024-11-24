@@ -2,8 +2,7 @@ import React from "react";
 import Select from "react-select";
 import s from './custom-select.module.scss'
 
-
-interface CompanyI {
+export interface CompanyI {
   name: string;
   inn: string;
   type: string;
@@ -12,11 +11,13 @@ interface SelectProps {
   onChange: (value: CompanyI) => void;
   companies: CompanyI[];
   defaultValue?: CompanyI;
+  setCurrentCompany: (value: CompanyI) => void
+
 }
 
-const CustomSelect: React.FC<SelectProps> = ({ companies, defaultValue }) => {
+const CustomSelect: React.FC<SelectProps> = ({ companies, defaultValue, setCurrentCompany }) => {
   const options = companies.map((company) => ({
-    value: company.inn, label: <div className={s.selectItem}>
+    value: company, label: <div className={s.selectItem}>
       <p>{company.name}</p>
       {company.type === 'elit' && <div className={`${s.status1} ${s.elit}`}>
         <p>Элитная</p>
@@ -26,7 +27,9 @@ const CustomSelect: React.FC<SelectProps> = ({ companies, defaultValue }) => {
   return (
     <Select
       onChange={(name) => {
-        console.log(name);
+        if (name) {
+          setCurrentCompany(name.value)
+        }
       }}
       defaultValue={{
         value: defaultValue?.inn, label: <div className={s.selectItem}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageTitle from "../../components/ui/page-title/page-title";
 import {
@@ -7,6 +7,7 @@ import {
   SendSvg,
   ArrowLink,
   DownloadSvg,
+  Plus,
 } from "../../components/svgs/svgs";
 import ChecksTable from "../../components/tables/checks-table/ckecks-table";
 import Button from "../../components/ui/button/button";
@@ -36,6 +37,7 @@ const ApplicationDetailed = () => {
   const [buyerCompanyName, setbuyerCompanyName] = useState("ООО “КОМПАНИЯ 1”");
   const [buyerInn, setBuyerInn] = useState("134841293138");
   const [currentCompany, setCurrentCompany] = useState(companies[0])
+  const [commissionPercentage, setCommissionPercentage] = useState('10');
 
   return (
     <div>
@@ -74,7 +76,7 @@ const ApplicationDetailed = () => {
         <h1 className={s.title}>Информация о заявке</h1>
         <div className={`${s.infoList}`}>
           <div className={`${s.infoCard} ${editing ? s.editingInfoCard : ""}`}>
-            <h2>ПОКУПАТЕЛЬ</h2>
+            <h2>ПРОДАВЕЦ</h2>
             <div className={s.infoItem}>
               <p>Компания</p>
               <div className={s.link}>
@@ -121,11 +123,11 @@ const ApplicationDetailed = () => {
               <p>Компания</p>
               <div className={`${s.link} ${s.elit}`}>
                 {editing ? (
-                  <CustomSelect onChange={setCurrentCompany} defaultValue={currentCompany} companies={companies}/>
+                  <CustomSelect setCurrentCompany={setCurrentCompany} onChange={setCurrentCompany} defaultValue={currentCompany} companies={companies}/>
                 ) : (
                   <>
-                    <h3>ООО "Инновации 2023"</h3>
-                    <div className={s.elitMark}>Элитная</div>
+                    <h3>{currentCompany.name}</h3>
+                    {currentCompany.type === "elit" && <div className={s.elitMark}>Элитная</div>}
                     <ArrowLink />
                   </>
                 )}
@@ -139,13 +141,13 @@ const ApplicationDetailed = () => {
                     <Input
                       disabled={true}
                       noMargin={true}
-                      value={buyerInn}
+                      value={currentCompany.inn}
                       onChange={(e) => setBuyerInn(e.target.value)}
                     />
                   </div>
                 ) : (
                   <>
-                    <h3>9876543210</h3>
+                    <h3>{currentCompany.inn}</h3>
                     <ArrowLink />
                   </>
                 )}
@@ -158,13 +160,39 @@ const ApplicationDetailed = () => {
             <div className={s.infoItem}>
               <p>Процент комиссии</p>
               <div className={`${s.link} ${s.none}`}>
-                <h3>не установлено</h3>
+                {editing ? (
+                  <div className={s.editInput}>
+                    <Input
+                      // disabled={true}
+                      noMargin={true}
+                      value={commissionPercentage}
+                      onChange={(e) => setCommissionPercentage(e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <h3>{commissionPercentage}%</h3>
+                  </>
+                )}
               </div>
             </div>
             <div className={s.infoItem}>
               <p>Сумма комиссии</p>
               <div className={`${s.link} ${s.none}`}>
-                <h3>не установлено</h3>
+              {editing ? (
+                  <div className={s.editInput}>
+                    <Input
+                      disabled={true}
+                      noMargin={true}
+                      value={String(91316*+commissionPercentage/100)}
+                      onChange={(e) => setCommissionPercentage(e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <h3>{String(91316*+commissionPercentage/100)}</h3>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -201,6 +229,7 @@ const ApplicationDetailed = () => {
         </div>
       </div>
       <ChecksTable />
+      {editing && <div className={s.bottomBtnDiv}><button><Plus />Добавить чеки</button></div>}
     </div>
   );
 };

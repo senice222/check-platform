@@ -10,6 +10,8 @@ import {
 import s from "./page-title.module.scss";
 import Button from "../button/button";
 import ChangingStatus from "../../changing-status/changing-status";
+
+
 interface PageTitleProps {
   title: string;
   statuses?: string[];
@@ -66,7 +68,7 @@ const PageTitle: FC<PageTitleProps> = ({
   noRightBtns,
   setStatuses,
   editing,
-  setEditing
+  setEditing, 
 }) => {
   const [statusesOpened, setStatusesOpened] = useState(false);
   const statusDisplay = () => {
@@ -79,7 +81,9 @@ const PageTitle: FC<PageTitleProps> = ({
     }
   };
   const saveHandle = () => {
-    setEditing(false);
+    if (setEditing) {
+      setEditing(false);
+    }
   }
   return (
     <div className={s.pageTitle}>

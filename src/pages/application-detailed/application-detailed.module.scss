@@ -215,3 +215,25 @@
   font-weight: 600;
   font-size: 24px;
 }
+.bottomBtnDiv {
+  width: 100%;
+  display: flex;
+  margin-top: 25px;
+  justify-content: center;
+  button {
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    gap: 5px;
+    background-color: #f0f0f0;
+    width: 140px;
+    border: 0;
+    height: 32px;
+    transition: .2s;
+    &:hover {
+      background-color: #dfdfdf;
+    }
+  }
+}

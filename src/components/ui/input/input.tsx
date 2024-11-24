@@ -16,7 +16,6 @@ interface InputProps {
 const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, noMargin, disabled }: InputProps) => {
    const [inputValue, setInputValue] = useState(value)
    const [inputType, setInputType] = useState('text')
-
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
       onChange && onChange(e)
@@ -37,7 +36,7 @@ const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, n
                type={inputType}
                placeholder={placeholder}
                className={style.input}
-               value={inputValue}
+               value={disabled ? value : inputValue}
                onChange={handleChange}
             />
             {icon && (

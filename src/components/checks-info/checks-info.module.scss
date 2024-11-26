@@ -1,0 +1,94 @@
+.checks {
+  width: 100%;
+  margin-top: 25px;
+  
+  .titleDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  // Десктопная версия
+  .checkInfoListDesktop {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    
+    @media (max-width: 805px) {
+      display: none;
+    }
+    
+    .item {
+      flex-grow: 1;
+      width: 266px;
+      padding: 16px;
+      background-color: #f7f7f8;
+      border: 1px solid #dee0e3;
+      border-radius: 10px;
+      
+      p {
+        color: #0f132499;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      
+      h4 {
+        margin-top: 10px;
+        color: #14151a;
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Мобильная версия
+  .checkInfoListMobile {
+    display: none;
+    margin-top: 20px;
+   
+    @media (max-width: 805px) {
+      display: block;
+    }
+
+    .mobileItem {
+      background-color: #f7f7f8;
+      border: 1px solid #dee0e3;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      border-radius: 10px;
+      padding: 16px;
+
+      .cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .label {
+          color: #0f132499;
+          font-size: 14px;
+          font-weight: 500;
+        }
+        
+        .value {
+          color: #14151a;
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+.title {
+  color: #14151a;
+  font-weight: 600;
+  font-size: 24px;
+} 

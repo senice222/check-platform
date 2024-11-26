@@ -1,0 +1,188 @@
+.comments { 
+    transition: 0.3s;
+    width: 100%;
+    overflow-y: hidden;
+    height: 290px;
+    pointer-events: all;
+    border: 1px solid #dee0e3;
+    border-radius: 16px;
+    margin-top: 30px;
+    display: flex;
+    opacity: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    .titleDiv {
+        display: flex;
+        justify-content: space-between;
+      h2 {
+        color: #14151a;
+        font-size: 18px;
+        font-weight: 500;
+      }
+      p {
+        margin-top: 5px;
+        color: rgba(15, 19, 36, 0.6);
+        font-size: 14px;
+        font-weight: 400;
+      }
+    }
+    .nothingFound {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 80px;
+      p {
+        margin-top: 4px;
+        color: #14151a;
+        font-weight: 500;
+        font-size: 16px;
+      }
+    }
+    .commentsList {
+      overflow-y: auto;
+      margin-top: 7px;
+      height: 100%;
+    }
+    .inputContainer {
+      height: 60px;
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      user-select: none;
+      justify-content: space-between;
+      align-items: flex-end;
+      .inputDiv {
+        padding: 10px 12px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        width: 96%;
+        border: 1px solid #dee0e3;
+        height: 40px;
+        input {
+          background-color: transparent;
+          border: none;
+          outline: none;
+          width: 97%;
+          font-size: 14px;
+        }
+        .send {
+          cursor: pointer;
+        }
+      }
+    }
+    .attachDiv {
+      border: 1px solid #dee0e3;
+      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .hiddenComments {
+    pointer-events: none;
+    margin-top: 0;
+    height: 0 !important;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .commentMessage {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    .avatar {
+        min-width: 40px;
+        color: #0A0F2940;
+        background-color: #E9EAEC;
+        display: flex;
+        font-size: 16px;
+        font-weight: 500;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        border-radius: 50%;
+    }
+    .header {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        .messageInfo {
+            display: flex;
+            align-items: center;
+            .name {
+                color: #14151A;
+                font-weight: 600;
+                font-size: 14px;
+            }
+            .date {
+                margin-left: 5px;
+                margin-top: 3px;
+                font-size: 10px;
+                font-weight: 500;
+                color: #0F132499;
+            }
+        }
+        .text {
+            margin-top: 4px;
+            color: #14151A;
+            font-weight: 400;
+            font-size: 14px;
+        }
+        .files {
+            margin-top: 7px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            .file {
+                border-radius: 12px;
+                // margin-top: 8px;
+                border: 1px solid #DEE0E3;
+                padding: 12px;
+                min-width: 248px;
+                display: flex;
+                .rightInfo {
+                    margin-left: 15px;
+                    .fileName {
+                        color: #14151A;
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                    .download {
+                        margin-top: 2px;
+                        cursor: pointer;
+                        color: #924FE8;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    .titleDiv {
+      flex-direction: column;
+      button {
+        margin-top: 7px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+    
+    }
+    .comments {
+      height: 428px;
+    }
+    .commentMessage {
+      width: 100%;
+    }
+    .file {
+      min-width: auto !important;
+      width: 100% !important;
+    }
+  }

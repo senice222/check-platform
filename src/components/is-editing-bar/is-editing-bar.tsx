@@ -4,11 +4,12 @@ import {Attention} from '../svgs/svgs'
 
 
 interface IsEditingBarProps {
-    isEditing: boolean
+    isEditing: boolean,
+    desktop?: boolean
 }
-const IsEditingBar: FC<IsEditingBarProps> = ({isEditing}) => {
+const IsEditingBar: FC<IsEditingBarProps> = ({isEditing, desktop}) => {
   return (
-    <div className={`${s.editingBar} ${isEditing ? s.active : ''}`}>
+    <div className={`${s.editingBar} ${isEditing ? s.active : ''} ${desktop ? s.desktop : ""}`}>
         <Attention />
         <p>Заявка редактируется</p>
     </div>

@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 import { ReactQueryProvider } from "../providers/react-query-provider";
+import { NotificationProvider } from "../contexts/NotificationContext/NotificationContext";
 
 export const AppProviders: FC<{ children: ReactNode }> = ({ children }) => (
-   <ReactQueryProvider>{children}</ReactQueryProvider>
+   <ReactQueryProvider><NotificationProvider>{children}</NotificationProvider></ReactQueryProvider>
 );

@@ -1,68 +1,82 @@
-import React, { FC, useState, useEffect, useRef } from "react";
-import s from "./changing-status.module.scss";
+import React, { FC, useEffect, useState } from "react";
+import { ApplicationStatus } from "../../constants/statuses";
+import StatusBadge from "../ui/status-badge/status-badge";
 import CheckBox from "../ui/check-box/check-box";
-import { getElement } from "../../components/ui/page-title/page-title";
+import s from "./changing-status.module.scss";
+import ChooseStatus from "../modals/choose-status/chose-status";
 
-interface ChangingStatusItemI {
-  status: string;
-  statuses: string[];
-  setStatuses: (statuses : string[]) => void;
-}
-
-interface ChangingStatusI {
+interface ChangingStatusProps {
+  statuses: ApplicationStatus[];
+  setStatuses: (statuses: ApplicationStatus[]) => void;
   isOpened: boolean;
   setOpened: () => void;
-  statuses: string[];
-  setStatuses: (statuses : string[]) => void;
-
 }
 
-const ChangingStatusItem: FC<ChangingStatusItemI> = ({ status, statuses, setStatuses }) => {
+const ChangingStatus: FC<ChangingStatusProps> = ({
+  statuses,
+  setStatuses,
+  isOpened,
+  setOpened,
+}) => {
+  const allStatuses: ApplicationStatus[] = ['created', 'issued', 'client_paid', 'us_paid'];
+  const [opened, setOpen] = useState(false);
+  const isMobile = window.innerWidth < 1000;
 
-  const setChecked = () => {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(`.${s.changingStatus}`) && !target.closest('button')) {
+        setOpened();
+      }
+    };
+
+    if (isOpened && !isMobile) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpened, setOpened, isMobile]);
+
+  const handleClick = (status: ApplicationStatus) => {
+    if (isMobile) {
+      setOpen(true);
+      return;
+    }
+
     if (statuses.includes(status)) {
-      setStatuses(statuses.filter((item) => item !== status));
+      setStatuses(statuses.filter((s) => s !== status));
     } else {
       setStatuses([...statuses, status]);
     }
-  }
-
-  return (
-    <div onClick={setChecked} className={s.item}>
-      <CheckBox setChecked={null} isChecked={statuses.includes(status)} />
-      <div className={s.status}>{getElement(status, true)}</div>
-    </div>
-  );
-};
-
-const ChangingStatus: FC<ChangingStatusI> = ({ isOpened, setOpened, statuses, setStatuses }) => {
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-      if (isOpened) {
-        setOpened();
-      }
-    }
   };
 
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [isOpened]);
-
   return (
-    <div
-      ref={wrapperRef}
-      className={`${s.ChangingStatus} ${isOpened ? s.opened : s.closed}`}
-    >
-      <ChangingStatusItem statuses={statuses} setStatuses={setStatuses} status={"created"} />
-      <ChangingStatusItem statuses={statuses} setStatuses={setStatuses} status={"issued"} />
-      <ChangingStatusItem statuses={statuses} setStatuses={setStatuses} status={"client_paid"} />
-      <ChangingStatusItem statuses={statuses} setStatuses={setStatuses} status={"us_paid"} />
-    </div>
+    <>
+      <ChooseStatus isOpened={opened} setOpen={setOpen} />
+      <div
+        className={`${s.changingStatus} ${isOpened ? s.opened : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {allStatuses.map((status) => (
+          <div
+            key={status}
+            onClick={() => handleClick(status)}
+            className={s.statusItem}
+          >
+            <CheckBox
+              isChecked={statuses.includes(status)}
+              setChecked={() => handleClick(status)}
+            />
+            <StatusBadge
+              status={status}
+              bordered={true}
+            />
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 

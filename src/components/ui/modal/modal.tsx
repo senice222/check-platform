@@ -5,10 +5,12 @@ interface ModalProps {
   children: React.ReactNode;
   isOpened: boolean;
   setOpen: (isOpen: boolean) => void;
-  styles?: React.CSSProperties
+  styles?: React.CSSProperties,
+  deskription?: string,
+  title: string
 }
 
-const Modal: React.FC<ModalProps> = ({ children, isOpened, setOpen }) => {
+const Modal: React.FC<ModalProps> = ({ children, isOpened, setOpen, title, deskription }) => {
   const [isRendered, setIsRendered] = useState(false); // Отвечает за наличие компонента в DOM
   const [isClosing, setIsClosing] = useState(false); // Запускает анимацию закрытия
 
@@ -47,10 +49,11 @@ const Modal: React.FC<ModalProps> = ({ children, isOpened, setOpen }) => {
         className={`${styles.modal} ${isClosing ? styles.slideOut : styles.slideIn}`}
         onClick={(e) => e.stopPropagation()} // Останавливаем всплытие клика
       >
-        <button className={styles.closeButton} onClick={handleClose}>
-          &times;
-        </button>
-        {children}
+        <div className={styles.content}>
+          <h1 className={styles.heading}>{title}</h1>
+          {deskription && <p className={styles.desk}>{deskription}</p>}
+          {children}
+        </div>
       </div>
     </div>
   );

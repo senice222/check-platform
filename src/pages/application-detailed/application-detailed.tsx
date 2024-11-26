@@ -1,235 +1,152 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { Company, ApplicationInfo } from "../../types/company.types";
+import { companies } from "../../constants/companies";
+import { Plus } from "../../components/svgs/svgs";
 import PageTitle from "../../components/ui/page-title/page-title";
-import {
-  Message,
-  AttachFile,
-  SendSvg,
-  ArrowLink,
-  DownloadSvg,
-  Plus,
-} from "../../components/svgs/svgs";
 import ChecksTable from "../../components/tables/checks-table/ckecks-table";
-import Button from "../../components/ui/button/button";
 import IsEditingBar from "../../components/is-editing-bar/is-editing-bar";
-import Input from "../../components/ui/input/input";
-import CustomSelect from "../../components/ui/custom-select/custom-select"
+import Comments from "../../components/comments/comments";
+import InfoCard from "../../components/info-card/info-card";
+import ChecksInfo from "../../components/checks-info/checks-info";
+import { ApplicationStatus } from "../../constants/statuses";
 import s from "./application-detailed.module.scss";
+import HistoryTable from "../../components/tables/history-table/history-table";
 
-
-const companies = [
-  { "name": "ООО \"КОМПАНИЯ 1\"", "inn": "472819374102", "type": "standart" },
-  { "name": "ООО \"КОМПАНИЯ 2\"", "inn": "382947561029", "type": "elit" },
-  { "name": "ООО \"КОМПАНИЯ 3\"", "inn": "928374610384", "type": "standart" },
-  { "name": "ООО \"КОМПАНИЯ 4\"", "inn": "738495610384", "type": "elit" },
-  { "name": "ООО \"КОМПАНИЯ 5\"", "inn": "182736492810", "type": "standart" },
-  { "name": "ООО \"КОМПАНИЯ 6\"", "inn": "837465910273", "type": "elit" },
-  { "name": "ООО \"КОМПАНИЯ 7\"", "inn": "284756109283", "type": "standart" },
-  { "name": "ООО \"КОМПАНИЯ 8\"", "inn": "495837261092", "type": "elit" },
-  { "name": "ООО \"КОМПАНИЯ 9\"", "inn": "183746529310", "type": "standart" },
-  { "name": "ООО \"КОМПАНИЯ 10\"", "inn": "937461028374", "type": "elit" }
-];
+const INITIAL_APPLICATION_INFO: ApplicationInfo = {
+  seller: {
+    companyName: "ООО \"КОМПАНИЯ 1\"",
+    inn: "134841293138"
+  },
+  buyer: companies[0],
+  commission: {
+    percentage: "10",
+    amount: "0"
+  }
+};
 
 const ApplicationDetailed = () => {
   const { id } = useParams();
-  const [statuses, setStatuses] = useState<string[]>(["created"]);
+  const [statuses, setStatuses] = useState<ApplicationStatus[]>(["created"]);
   const [editing, setEditing] = useState(false);
-  const [buyerCompanyName, setbuyerCompanyName] = useState("ООО “КОМПАНИЯ 1”");
-  const [buyerInn, setBuyerInn] = useState("134841293138");
-  const [currentCompany, setCurrentCompany] = useState(companies[0])
-  const [commissionPercentage, setCommissionPercentage] = useState('10');
+  const [applicationInfo, setApplicationInfo] = useState<ApplicationInfo>(INITIAL_APPLICATION_INFO);
+
+  const handleSellerChange = (field: keyof typeof applicationInfo.seller, value: string) => {
+    setApplicationInfo(prev => ({
+      ...prev,
+      seller: {
+        ...prev.seller,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleBuyerChange = (company: Company) => {
+    setApplicationInfo(prev => ({
+      ...prev,
+      buyer: company
+    }));
+  };
+
+  const handleCommissionChange = (percentage: string) => {
+    const amount = String(91316 * +percentage / 100);
+    setApplicationInfo(prev => ({
+      ...prev,
+      commission: {
+        percentage,
+        amount
+      }
+    }));
+  };
 
   return (
     <div>
-      <IsEditingBar isEditing={editing} />
+      <IsEditingBar isEditing={editing}  desktop={true}/>
       <PageTitle
         title="Заявка #01"
         statuses={statuses}
         setStatuses={setStatuses}
-        name={"Евгений"}
+        name="Евгений"
         editing={editing}
         setEditing={setEditing}
-        date={"31/08/24"}
+        date="31/08/24"
       />
-      <div className={`${s.comments} ${editing ? s.hiddenComments : ""}`}>
-        <div className={s.titleDiv}>
-          <h2>Комментарии по заявке</h2>
-          <p>Видны только администраторам</p>
-        </div>
-        <div className={s.nothingFound}>
-          <Message />
-          <p>Пока что комментариев нет</p>
-        </div>
-        <div className={s.inputContainer}>
-          <div className={s.attachDiv}>
-            <AttachFile />
-          </div>
-          <div className={s.inputDiv}>
-            <input type="text" placeholder="Написать комментарий" />
-            <div className={s.send}>
-              <SendSvg />
-            </div>
-          </div>
-        </div>
-      </div>
+      <Comments editing={editing} />
+
       <div className={s.applicationInfo}>
         <h1 className={s.title}>Информация о заявке</h1>
-        <div className={`${s.infoList}`}>
-          <div className={`${s.infoCard} ${editing ? s.editingInfoCard : ""}`}>
-            <h2>ПРОДАВЕЦ</h2>
-            <div className={s.infoItem}>
-              <p>Компания</p>
-              <div className={s.link}>
-                {editing ? (
-                  <div className={s.editInput}>
-                    <Input
+        <div className={s.infoList}>
+          <InfoCard
+            title="ПРОДАВЕЦ"
+            editing={editing}
+            fields={[
+              {
+                label: "Компания",
+                value: applicationInfo.seller.companyName,
+                onChange: (value) => handleSellerChange('companyName', value)
+              },
+              {
+                label: "ИНН",
+                value: applicationInfo.seller.inn,
+                onChange: (value) => handleSellerChange('inn', value)
+              }
+            ]}
+          />
 
-                      value={buyerCompanyName}
-                      noMargin={true}
-                      onChange={(e) => setbuyerCompanyName(e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h3>{buyerCompanyName}</h3>
-                    <ArrowLink />
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={s.infoItem}>
-              <p>ИНН</p>
-              <div className={s.link}>
-                {editing ? (
-                  <div className={s.editInput}>
-                    <Input
-                      noMargin={true}
-                      value={buyerInn}
-                      onChange={(e) => setBuyerInn(e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h3>{buyerInn}</h3>
-                    <ArrowLink />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className={`${s.infoCard} ${editing ? s.editingInfoCard : ""}`}>
-            <h2>ПОКУПАТЕЛЬ</h2>
-            <div className={s.infoItem}>
-              <p>Компания</p>
-              <div className={`${s.link} ${s.elit}`}>
-                {editing ? (
-                  <CustomSelect setCurrentCompany={setCurrentCompany} onChange={setCurrentCompany} defaultValue={currentCompany} companies={companies}/>
-                ) : (
-                  <>
-                    <h3>{currentCompany.name}</h3>
-                    {currentCompany.type === "elit" && <div className={s.elitMark}>Элитная</div>}
-                    <ArrowLink />
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={s.infoItem}>
-              <p>ИНН</p>
-              <div className={s.link}>
-              {editing ? (
-                  <div className={s.editInput}>
-                    <Input
-                      disabled={true}
-                      noMargin={true}
-                      value={currentCompany.inn}
-                      onChange={(e) => setBuyerInn(e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h3>{currentCompany.inn}</h3>
-                    <ArrowLink />
-                  </>
-                )}
+          <InfoCard
+            title="ПОКУПАТЕЛЬ"
+            editing={editing}
+            isCustomSelect
+            company={applicationInfo.buyer}
+            companies={companies}
+            onCompanyChange={handleBuyerChange}
+          />
 
-              </div>
-            </div>
-          </div>
-          <div className={`${s.infoCard} ${editing ? s.editingInfoCard : ""}`}>
-            <h2>КОМИССИЯ</h2>
-            <div className={s.infoItem}>
-              <p>Процент комиссии</p>
-              <div className={`${s.link} ${s.none}`}>
-                {editing ? (
-                  <div className={s.editInput}>
-                    <Input
-                      // disabled={true}
-                      noMargin={true}
-                      value={commissionPercentage}
-                      onChange={(e) => setCommissionPercentage(e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h3>{commissionPercentage}%</h3>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={s.infoItem}>
-              <p>Сумма комиссии</p>
-              <div className={`${s.link} ${s.none}`}>
-              {editing ? (
-                  <div className={s.editInput}>
-                    <Input
-                      disabled={true}
-                      noMargin={true}
-                      value={String(91316*+commissionPercentage/100)}
-                      onChange={(e) => setCommissionPercentage(e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h3>{String(91316*+commissionPercentage/100)}</h3>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={s.checks}>
-        <div className={s.titleDiv}>
-          <h1 className={s.title}>Чеки</h1>
-          <Button
-            icon={<DownloadSvg />}
-            variant={"purple"}
-            styleLabel={{ fontSize: "14px" }}
-            label={"Экспортировать в XLS"}
-            style={{ width: "200px", height: "32px" }}
+          <InfoCard
+            title="КОМИССИЯ"
+            editing={editing}
+            fields={[
+              {
+                label: "Процент комиссии",
+                value: applicationInfo.commission.percentage,
+                onChange: handleCommissionChange,
+                suffix: "%",
+                hideArrow: true
+              },
+              {
+                label: "Сумма комиссии",
+                value: applicationInfo.commission.amount,
+                disabled: true,
+                onChange: () => { },
+                hideArrow: true
+              }
+            ]}
           />
         </div>
-        <div className={s.checkInfoList}>
-          <div className={s.item}>
-            <p>Даты</p>
-            <h4>01/09/24 → 01/10/24</h4>
-          </div>
-          <div className={s.item}>
-            <p>Кол-во чеков</p>
-            <h4>12</h4>
-          </div>
-          <div className={s.item}>
-            <p>Сумма с НДС</p>
-            <h4>91,316.00</h4>
-          </div>
-          <div className={s.item}>
-            <p>НДС 20%</p>
-            <h4>91,316.00</h4>
-          </div>
-        </div>
       </div>
+
+      <ChecksInfo
+        dates="01/09/24 → 01/10/24"
+        checksCount={12}
+        sumWithVat="91,316.00"
+        vat="91,316.00"
+      />
+
       <ChecksTable />
-      {editing && <div className={s.bottomBtnDiv}><button><Plus />Добавить чеки</button></div>}
+
+      {!editing && <div className={s.historySection}>
+        <h1 className={s.title}>История изменений</h1>
+        <HistoryTable />
+      </div>}
+
+      {editing && (
+        <div className={s.bottomBtnDiv}>
+          <button>
+            <Plus />
+            Добавить чеки
+          </button>
+        </div>
+      )}
     </div>
   );
 };

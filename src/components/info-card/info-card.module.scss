@@ -1,0 +1,130 @@
+.infoCard {
+  width: 370px;
+  height: 184px;
+  flex-grow: 1;
+  transition: 0.2s;
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #dee0e3;
+  background: #FFFFFF;
+  
+  h2 {
+    color: #0d112666;
+    font-weight: 500;
+    font-size: 16px;
+  }
+}
+
+.editingInfoCard {
+  height: 232px !important;
+  background: #F9F9F9;
+}
+
+.infoItem {
+  p {
+    color: #0f132499;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  
+  h3 {
+    color: #741de2;
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: underline;
+  }
+  
+  .link {
+    margin-top: 4px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    
+    svg {
+      margin-right: 5px;
+    }
+    
+    .editInput {
+      width: 100%;
+      margin-top: 2px;
+    }
+
+    &.commission {
+      cursor: default;
+      h3 {
+        color: #14151a;
+        text-decoration: none;
+      }
+    }
+  }
+  
+  .none {
+    cursor: text;
+    h3 {
+      color: #14151a;
+      text-decoration: none;
+    }
+  }
+
+  .elit {
+    h3 {
+      color: #ae590a !important;
+    }
+    svg {
+      path {
+        fill: #ae590a !important;
+      }
+    }
+  }
+  
+  .elitMark {
+    margin-left: 5px;
+    padding: 3px 6px;
+    background-color: #fdead8;
+    border-radius: 6px;
+    color: #ae590a;
+  }
+}
+
+.selectItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  p {
+    margin: 0;
+  }
+}
+
+.status1 {
+  padding: 2px 8px;
+  border-radius: 4px;
+  
+  p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  
+  &.elit {
+    background: #fdead8;
+    
+    p {
+      color: #ae590a;
+    }
+  }
+} 
+@media screen and (max-width: 1000px) {
+  .infoCard {
+    width: 45%;
+  }
+}
+@media screen and (max-width: 726px) {
+  .infoCard {
+    width: 100%;
+  }
+}

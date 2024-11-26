@@ -1,0 +1,61 @@
+.container {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee0e3;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #f7f7f8;
+  }
+
+  th {
+    font-weight: 400;
+    color: #0F132499;
+    background-color: #f8f8f8;
+
+    &:first-child {
+      padding-right: 32px;
+      min-width: 180px;
+    }
+  }
+
+  td {
+    color: #333;
+    white-space: nowrap;
+    
+    &:first-child {
+      padding-right: 32px;
+      min-width: 180px;
+    }
+    
+    &:last-child {
+      width: 100%;
+      min-width: 400px;
+      white-space: normal;
+    }
+  }
+}
+
+.userLink {
+  display: inline;
+  margin-left: 4px;
+  font-weight: 500;
+  color: #924FE8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.statusContainer {
+  display: inline-block;
+  margin-left: 4px;
+} 

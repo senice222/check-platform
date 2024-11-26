@@ -1,0 +1,37 @@
+.content {
+    min-height: 322px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.statusList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.statusItem {
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F7F7F8;
+    border: 1px solid #DEE0E3;
+
+    &:hover {
+        background: #F5F5F5;
+    }
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+@media screen and (min-width: 1000px) {
+    // Скрываем модальное окно на десктопе
+    // display: none;
+}

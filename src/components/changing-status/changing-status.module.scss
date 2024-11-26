@@ -1,44 +1,49 @@
-.ChangingStatus {
-  margin-left: -70px;
-  margin-top: 10px;
+.changingStatus {
   position: absolute;
+  top: 40px;
+  right: 0;
   width: 232px;
-  height: 130px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-
-  pointer-events: all;
-  border: 1px solid #dee0e3;
+  height: 120px;
+  background: #FFFFFF;
+  border: 1px solid #DEE0E3;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 4px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: 0.2s;
+  z-index: 100;
+  overflow: auto;
 
-  // Состояние при закрытии
-  &.closed {
-    opacity: 0;
-    pointer-events: none; // Чтобы нельзя было взаимодействовать
-  }
-
-  // Состояние при открытии
   &.opened {
     opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+}
+
+.statusItem {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    background: #F5F5F5;
   }
 
-  .item {
+  input {
+    width: 16px;
+    height: 16px;
     cursor: pointer;
-    display: flex;
-    &:hover {
-      background-color: #0A0F290A;
-    }
-    border-radius: 6px;
-    align-items: center;
-    padding: 8px;
-    gap: 4px;
-
-    .status {
-      margin-left: 6px;
-    }
+  }
+}
+@media screen and (max-width: 1000px) {
+  .changingStatus {
+    display: none;
   }
 }

@@ -146,3 +146,110 @@
     font-size: 12px !important;
   }
 }
+.responsiveHeader {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #DEE0E3;
+  
+  h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  .backBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    
+    span {
+      color: #7364DB;
+      font-size: 17px;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      path {
+        stroke: #7364DB;
+      }
+    }
+  }
+
+  .editBtn {
+    color: #7364DB;
+    font-size: 17px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .backArrow {
+    display: none;
+  }
+  .rightBtns {
+    display: none !important;
+  }
+  .responsiveHeader {
+    display: flex;
+  }
+  .pageTitle {
+    margin-top: 55px;
+    flex-direction: column;
+    .title {
+      font-size: 24px;
+    }
+    .top {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .statuses {
+      margin-left: 0;
+      margin-top: 4px;
+    }
+    .bott {
+      margin-top: 10px;
+    }
+  }
+}
+
+
+// @media screen and (max-width: 992px) {
+//   .wrapper {
+//     .rightBtns {
+//       width: 45vw;
+//     }
+//   }
+// }
+
+// @media screen and (max-width: 768px) {
+//   .wrapper {
+//     flex-direction: column;
+//     gap: 15px;
+//     align-items: flex-start;
+
+//     .rightBtns {
+//       width: 100%;
+//       justify-content: flex-start;
+//     }
+//   }
+// }
+
+// @media screen and (max-width: 576px) {
+//   .wrapper {
+//     .globalLeft {
+//       flex-direction: column;
+//       gap: 10px;
+//       width: 100%;
+//     }
+//   }
+// }

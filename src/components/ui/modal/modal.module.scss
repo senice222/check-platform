@@ -91,3 +91,31 @@
       opacity: 0;
     }
   }
+.heading {
+    color: #14151A;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+}
+.desk {
+    margin-top: 8px;
+    color: #0F132499;
+    font-size: 16px;
+    font-weight: 400;
+}
+@media screen and (max-width: 1000px) {
+  .modal {
+    position: absolute;
+    bottom: 40px;
+    width: 90vw;
+    max-width: none;
+    .content {
+      h1 {
+          font-size: 18px;
+      }
+      .desk {
+        font-size: 14px;
+      }
+  }
+  }
+}

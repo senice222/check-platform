@@ -1,0 +1,51 @@
+.selectDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #FFFFFF;
+  border: 1px solid #DEE0E3;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1000;
+  padding: 4px;
+
+  &[data-select-type="company"] {
+    min-width: 300px;
+  }
+  &[data-select-type="seller"] {
+    min-width: 250px;
+  }
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #F5F5F5;
+  }
+
+  &[data-checked="true"] {
+    background-color: #0A0F290A;
+  }
+
+  span {
+    font-size: 14px;
+    color: #14151A;
+    margin-left: 7px;
+  }
+}

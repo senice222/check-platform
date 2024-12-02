@@ -1,0 +1,47 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content {
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .inputGroup {
+    input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #DEE0E3;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+
+      &::placeholder {
+        color: #0D112666;
+      }
+
+      &:focus {
+        border-color: #741DE2;
+      }
+    }
+  }
+} 

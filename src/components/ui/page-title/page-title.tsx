@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   TopArrow
 } from "../../svgs/svgs";
+
 import { ApplicationStatus } from "../../../constants/statuses";
 import StatusBadge from "../status-badge/status-badge";
 import Button from "../button/button";
@@ -144,6 +145,8 @@ const PageTitle: FC<PageTitleProps> = ({
         setEditing={() => setEditing?.(false)}
       />
       <ChooseStatus 
+        statuses={statuses}
+        setStatuses={setStatuses}
         isOpened={chooseStatusOpened} 
         setOpen={setChooseStatusOpened}
       />

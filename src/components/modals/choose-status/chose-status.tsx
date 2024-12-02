@@ -9,11 +9,14 @@ import Button from '../../ui/button/button';
 interface Props {
   isOpened: boolean;
   setOpen: (isOpen: boolean) => void;
+  setStatuses?: (statuses: ApplicationStatus[]) => void;
+  statuses?: ApplicationStatus[];
+
 }
 
-const ChooseStatus: FC<Props> = ({ isOpened, setOpen }) => {
+const ChooseStatus: FC<Props> = ({ isOpened, setOpen, setStatuses : setFinalStatuses, statuses : initialStatuses }) => {
   const allStatuses: ApplicationStatus[] = ['created', 'issued', 'client_paid', 'us_paid'];
-  const [statuses, setStatuses] = React.useState<ApplicationStatus[]>([]);
+  const [statuses, setStatuses] = React.useState<ApplicationStatus[]>(initialStatuses || []);
 
   const handleClick = (status: ApplicationStatus) => {
     if (statuses.includes(status)) {
@@ -22,6 +25,10 @@ const ChooseStatus: FC<Props> = ({ isOpened, setOpen }) => {
       setStatuses([...statuses, status]);
     }
   };
+  const handleSave = () => {
+    setFinalStatuses?.(statuses);
+    setOpen(false);
+  }
   
   return (
     <Modal 
@@ -55,7 +62,7 @@ const ChooseStatus: FC<Props> = ({ isOpened, setOpen }) => {
             styleLabel={{fontSize: '14px', fontWeight: '500'}} 
             variant='purple' 
             label='Сохранить' 
-            onClick={() => setOpen(false)}
+            onClick={handleSave}
           />
         </div>
       </div>

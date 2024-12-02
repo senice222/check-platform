@@ -2,7 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import styles from "./date-selector.module.scss";
 import { ArrowLeft, ArrowRight, ArrowSelect, CalendarIcon } from "../../svgs/svgs";
 
-const CustomDateSelector = () => {
+interface DateSelectorProps {
+  onDateChange: (start: string, end: string) => void;
+}
+
+const CustomDateSelector: React.FC<DateSelectorProps> = ({ onDateChange }) => {
    const [selectedDates, setSelectedDates] = useState<{ start: Date | null; end: Date | null }>({
       start: null,
       end: null,
@@ -37,12 +41,28 @@ const CustomDateSelector = () => {
    const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
 
    const handleDateClick = (date: Date) => {
-      if (!selectedDates.start || (selectedDates.start && selectedDates.end)) {
-         setSelectedDates({ start: date, end: null });
+      if (!selectedDates.start) {
+         const newDates = { start: date, end: null };
+         setSelectedDates(newDates);
+         onDateChange(date.toISOString().split('T')[0], '');
+      } else if (!selectedDates.end) {
+         if (date.getTime() === selectedDates.start.getTime()) {
+            setSelectedDates({ start: null, end: null });
+            onDateChange('', '');
+         } else {
+            const newDates = date > selectedDates.start 
+               ? { start: selectedDates.start, end: date }
+               : { start: date, end: selectedDates.start };
+            setSelectedDates(newDates);
+            onDateChange(
+               newDates.start.toISOString().split('T')[0],
+               newDates.end.toISOString().split('T')[0]
+            );
+         }
       } else {
-         setSelectedDates((prev) =>
-            date > (prev.start as Date) ? { start: prev.start, end: date } : { start: date, end: prev.start }
-         );
+         const newDates = { start: date, end: null };
+         setSelectedDates(newDates);
+         onDateChange(date.toISOString().split('T')[0], '');
       }
    };
 
@@ -84,17 +104,32 @@ const CustomDateSelector = () => {
       return days;
    };
 
-
    const changeMonth = (direction: number) => {
       setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + direction, 1));
    };
 
+   const formatDateForDisplay = (date: Date) => {
+      return date.toLocaleDateString('ru-RU', { 
+         day: '2-digit',
+         month: '2-digit',
+         year: '2-digit'
+      });
+   };
+
    return (
       <div className={styles.dateSelector}>
-         <div className={styles.trigger} onClick={toggleCalendar} ref={triggerRef}>
-            <CalendarIcon />
-            <p>Выберите дату</p>
-            <ArrowSelect />
+         <div className={`${styles.trigger} ${isOpen ? styles.active : ''}`} onClick={toggleCalendar} ref={triggerRef}>
+            <div className={styles.icon}><CalendarIcon /></div>
+            <p className={styles.label}>
+               {selectedDates.start 
+                  ? selectedDates.end
+                     ? `${formatDateForDisplay(selectedDates.start)} - ${formatDateForDisplay(selectedDates.end)}`
+                     : formatDateForDisplay(selectedDates.start)
+                  : 'По дате'}
+            </p>
+            <div className={`${styles.arrow} ${isOpen ? styles.open : ''}`}>
+              <ArrowSelect />
+            </div>
          </div>
          <div className={`${styles.popover} ${isOpen ? styles.active : ""}`} ref={popoverRef}>
             <div className={styles.header}>

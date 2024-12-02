@@ -1,5 +1,6 @@
 .content {
-    min-height: 322px;
+    // min-height: 322px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -12,18 +13,19 @@
 }
 
 .statusItem {
-    padding: 12px;
+    padding: 6px;
     cursor: pointer;
     border-radius: 8px;
     transition: 0.2s;
     display: flex;
+    transition: .2s;
     align-items: center;
     gap: 8px;
     background: #F7F7F8;
     border: 1px solid #DEE0E3;
 
     &:hover {
-        background: #F5F5F5;
+        background: #e2e2e2;
     }
 }
 

@@ -21,7 +21,19 @@
     margin-left: 8px;
     gap: 5px;
   }
-
+  .userIconSvg {
+    margin-right: 10px;
+  }
+  .titleDivUser {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    p {
+      color: #0F132499;
+      font-weight: 400;
+      font-size: 16px;
+    }
+  }
   .status1 {
     border-radius: 8px;
     padding: 4px 6px;

@@ -1,18 +1,99 @@
 .selectWrapper {
   position: relative;
+  width: auto;
+
+  &[data-select-type="date"],
+  &[data-select-type="sum"] {
+    min-width: 150px;
+  }
+
+  &[data-select-type="client"] {
+    min-width: 180px;
+  }
+
+  &[data-select-type="company"] {
+    min-width: 180px;
+  }
+
+  &[data-select-type="seller"] {
+    min-width: 180px;
+  }
+
+  &[data-select-type="status"] {
+    min-width: 180px;
+  }
+
+  &[data-select-type="mobile-client"],
+  &[data-select-type="mobile-company"],
+  &[data-select-type="mobile-seller"],
+  &[data-select-type="mobile-status"],
+  &[data-select-type="mobile-sum"] {
+    width: 100%;
+    min-width: unset;
+  }
 }
 
-.customSelect {
+.selectedRange {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  > span {
+    color: #14151A;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .dateRange {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    span {
+      color: #0F132499;
+      font-size: 14px;
+
+      &.active {
+        color: #924FE8;
+      }
+    }
+    
+    button {
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      
+      svg path {
+        fill: #924FE8;
+        opacity: 0.6;
+      }
+      
+      &:hover svg path {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.selectButton {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: white;
+  height: 32px;
+  padding: 0 12px;
+  background: #FFFFFF;
   border: 1px solid #DEE0E3;
   border-radius: 12px;
   cursor: pointer;
+  width: 100%;
   transition: all 0.2s ease;
-  height: 32px;
+  font-size: 14px;
+  color: var(--gray-900);
+  outline: none;
 
   &:hover {
     border-color: #7B48EE;
@@ -21,27 +102,51 @@
   &.active {
     border-color: #7B48EE;
   }
+
+  span {
+    font-size: 14px;
+    color: #14151A;
+    white-space: nowrap;
+  }
+
+  svg {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+    
+    path {
+      fill-opacity: 0.6;
+    }
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
 }
 
-.icon {
-  display: flex;
-  align-items: center;
-}
+@media screen and (max-width: 600px) {
+  .selectWrapper {
+    width: 100%;
+    min-width: unset;
+  }
 
-.label {
-  font-size: 14px;
-  color: #14151A;
-  margin: 0;
-  white-space: nowrap;
-}
+  .selectButton {
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #DEE0E3;
+    border-radius: 8px;
+    color: #0F132499;
+    justify-content: flex-start;
+    
+    &:hover, &.active {
+      border-color: #7B48EE;
+    }
 
-.arrow {
-  display: flex;
-  align-items: center;
-  transition: transform 0.2s ease;
-  margin-left: auto;
+    span {
+      color: #0F132499;
+    }
 
-  &.open {
-    transform: rotate(180deg);
+    svg:first-child {
+      display: none;
+    }
   }
 }

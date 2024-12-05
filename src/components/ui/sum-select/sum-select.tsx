@@ -28,6 +28,16 @@ const SumSelect: React.FC<SumSelectProps> = ({ onApply }) => {
     setIsOpen(false);
   };
 
+  const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setFromValue(value);
+  };
+
+  const handleToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setToValue(value);
+  };
+
   return (
     <div className={styles.selectWrapper} ref={selectRef}>
       <div 
@@ -46,19 +56,19 @@ const SumSelect: React.FC<SumSelectProps> = ({ onApply }) => {
             <div className={styles.inputGroup}>
               <label>От</label>
               <input
-                type="number"
+                type="text"
                 placeholder="0"
                 value={fromValue}
-                onChange={(e) => setFromValue(e.target.value)}
+                onChange={handleFromChange}
               />
             </div>
             <div className={styles.inputGroup}>
               <label>До</label>
               <input
-                type="number"
+                type="text"
                 placeholder="999999"
                 value={toValue}
-                onChange={(e) => setToValue(e.target.value)}
+                onChange={handleToChange}
               />
             </div>
           </div>

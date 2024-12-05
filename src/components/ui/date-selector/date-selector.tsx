@@ -1,159 +1,199 @@
-import React, { useState, useRef, useEffect } from "react";
-import styles from "./date-selector.module.scss";
-import { ArrowLeft, ArrowRight, ArrowSelect, CalendarIcon } from "../../svgs/svgs";
+import React, { useState, useEffect } from 'react';
+import styles from './date-selector.module.scss';
+import { Calendar, Cross, ArrowLeft, ArrowRight } from '../../svgs/svgs';
 
 interface DateSelectorProps {
   onDateChange: (start: string, end: string) => void;
+  type?: string;
 }
 
-const CustomDateSelector: React.FC<DateSelectorProps> = ({ onDateChange }) => {
-   const [selectedDates, setSelectedDates] = useState<{ start: Date | null; end: Date | null }>({
-      start: null,
-      end: null,
-   });
-   const [isOpen, setIsOpen] = useState(false);
-   const [currentMonth, setCurrentMonth] = useState(new Date());
-   const popoverRef = useRef<HTMLDivElement>(null);
-   const triggerRef = useRef<HTMLDivElement>(null);
+const DateSelector: React.FC<DateSelectorProps> = ({ onDateChange, type }) => {
+  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isOpen, setIsOpen] = useState(false);
 
-   const toggleCalendar = () => setIsOpen((prev) => !prev);
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString('ru-RU', { 
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    });
+  };
 
-   const closeCalendar = (e: MouseEvent) => {
-      if (
-         popoverRef.current && !popoverRef.current.contains(e.target as Node) &&
-         triggerRef.current && !triggerRef.current.contains(e.target as Node)
-      ) {
-         setIsOpen(false);
-      }
-   };
-
-   useEffect(() => {
-      if (isOpen) {
-         document.addEventListener("mousedown", closeCalendar);
+  const handleDateClick = (date: Date) => {
+    if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+      setSelectedStartDate(date);
+      setSelectedEndDate(null);
+    } else {
+      if (date < selectedStartDate) {
+        setSelectedStartDate(date);
+        setSelectedEndDate(null);
       } else {
-         document.removeEventListener("mousedown", closeCalendar);
+        setSelectedEndDate(date);
+        if (type !== 'date') {
+          setIsOpen(false);
+        }
       }
-      return () => document.removeEventListener("mousedown", closeCalendar);
-   }, [isOpen]);
+    }
+  };
 
-   const daysInMonth = (month: number, year: number) => new Date(year, month + 1, 0).getDate();
+  useEffect(() => {
+    if (selectedStartDate && selectedEndDate) {
+      onDateChange(formatDate(selectedStartDate), formatDate(selectedEndDate));
+    }
+  }, [selectedStartDate, selectedEndDate]);
 
-   const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+  const clearSelection = () => {
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
+    onDateChange('', '');
+  };
 
-   const handleDateClick = (date: Date) => {
-      if (!selectedDates.start) {
-         const newDates = { start: date, end: null };
-         setSelectedDates(newDates);
-         onDateChange(date.toISOString().split('T')[0], '');
-      } else if (!selectedDates.end) {
-         if (date.getTime() === selectedDates.start.getTime()) {
-            setSelectedDates({ start: null, end: null });
-            onDateChange('', '');
-         } else {
-            const newDates = date > selectedDates.start 
-               ? { start: selectedDates.start, end: date }
-               : { start: date, end: selectedDates.start };
-            setSelectedDates(newDates);
-            onDateChange(
-               newDates.start.toISOString().split('T')[0],
-               newDates.end.toISOString().split('T')[0]
-            );
-         }
-      } else {
-         const newDates = { start: date, end: null };
-         setSelectedDates(newDates);
-         onDateChange(date.toISOString().split('T')[0], '');
+  const toggleCalendar = () => {
+    if (type !== 'date') {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  const getSelectedDateRange = () => {
+    if (!selectedStartDate) return '';
+    if (!selectedEndDate) return formatDate(selectedStartDate);
+    return `${formatDate(selectedStartDate)} – ${formatDate(selectedEndDate)}`;
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    
+    const days = [];
+    
+    for (let i = 0; i < (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1); i++) {
+      days.push({ date: null, type: 'blank' });
+    }
+    
+    for (let i = 1; i <= daysInMonth; i++) {
+      const currentDate = new Date(year, month, i);
+      days.push({ date: currentDate, type: 'day' });
+    }
+    
+    return days;
+  };
+
+  const isDateInRange = (date: Date) => {
+    if (!selectedStartDate || !selectedEndDate) return false;
+    return date > selectedStartDate && date < selectedEndDate;
+  };
+
+  const isDateSelected = (date: Date) => {
+    if (!date) return false;
+    return (
+      (selectedStartDate && date.getTime() === selectedStartDate.getTime()) ||
+      (selectedEndDate && date.getTime() === selectedEndDate.getTime())
+    );
+  };
+
+  const getDateClassName = (date: Date | null) => {
+    if (!date) return styles.blank;
+    
+    const classNames = [styles.day];
+    
+    if (isDateSelected(date)) {
+      if (selectedStartDate && date.getTime() === selectedStartDate.getTime()) {
+        classNames.push(styles.firstSelected);
       }
-   };
-
-   const renderDays = () => {
-      const days = [];
-      const totalDays = daysInMonth(currentMonth.getMonth(), currentMonth.getFullYear());
-      const blanks = startOfMonth;
-
-      for (let i = 0; i < blanks; i++) {
-         days.push(<div key={`blank-${i}`} className={styles.blank}></div>);
+      if (selectedEndDate && date.getTime() === selectedEndDate.getTime()) {
+        classNames.push(styles.lastSelected);
       }
+    }
+    
+    if (isDateInRange(date)) {
+      classNames.push(styles.inRange);
+    }
+    
+    return classNames.join(' ');
+  };
 
-      for (let i = 1; i <= totalDays; i++) {
-         const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i);
-         const isStart = selectedDates.start && currentDate.toDateString() === selectedDates.start.toDateString();
-         const isEnd = selectedDates.end && currentDate.toDateString() === selectedDates.end.toDateString();
-         const isSelected = isStart || isEnd;
-         const isInRange =
-            selectedDates.start &&
-            selectedDates.end &&
-            currentDate > selectedDates.start &&
-            currentDate < selectedDates.end;
+  const changeMonth = (increment: number) => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() + increment);
+    setCurrentMonth(newMonth);
+  };
 
-         days.push(
-            <div
-               key={i}
-               className={`${styles.day}
-                        ${isSelected ? styles.selected : ""}
-                        ${isInRange ? styles.inRange : ""}
-                        ${isStart ? styles.firstSelected : ""}
-                        ${isEnd ? styles.lastSelected : ""}`}
-               onClick={() => handleDateClick(currentDate)}
-            >
-               {i}
-            </div>
-         );
-      }
-
-      return days;
-   };
-
-   const changeMonth = (direction: number) => {
-      setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + direction, 1));
-   };
-
-   const formatDateForDisplay = (date: Date) => {
-      return date.toLocaleDateString('ru-RU', { 
-         day: '2-digit',
-         month: '2-digit',
-         year: '2-digit'
-      });
-   };
-
-   return (
-      <div className={styles.dateSelector}>
-         <div className={`${styles.trigger} ${isOpen ? styles.active : ''}`} onClick={toggleCalendar} ref={triggerRef}>
-            <div className={styles.icon}><CalendarIcon /></div>
-            <p className={styles.label}>
-               {selectedDates.start 
-                  ? selectedDates.end
-                     ? `${formatDateForDisplay(selectedDates.start)} - ${formatDateForDisplay(selectedDates.end)}`
-                     : formatDateForDisplay(selectedDates.start)
-                  : 'По дате'}
-            </p>
-            <div className={`${styles.arrow} ${isOpen ? styles.open : ''}`}>
-              <ArrowSelect />
-            </div>
-         </div>
-         <div className={`${styles.popover} ${isOpen ? styles.active : ""}`} ref={popoverRef}>
-            <div className={styles.header}>
-               <span>
-                  {currentMonth.toLocaleString("default", { month: "long" })} {currentMonth.getFullYear()}
-               </span>
-               <div>
-                  <button onClick={() => changeMonth(-1)}><ArrowLeft /></button>
-                  <button onClick={() => changeMonth(1)}><ArrowRight /></button>
-               </div>
-            </div>
-            <div className={styles.days}>
-               <div className={styles.dayLabel}>S</div>
-               <div className={styles.dayLabel}>M</div>
-               <div className={styles.dayLabel}>T</div>
-               <div className={styles.dayLabel}>W</div>
-               <div className={styles.dayLabel}>T</div>
-               <div className={styles.dayLabel}>F</div>
-               <div className={styles.dayLabel}>S</div>
-               {renderDays()}
-            </div>
-         </div>
+  const renderCalendar = () => (
+    <div className={styles.calendar}>
+      <div className={styles.header}>
+        <span>
+          {currentMonth.toLocaleString('ru-RU', { month: 'long', year: 'numeric' })}
+        </span>
+        <div>
+          <button onClick={() => changeMonth(-1)}><ArrowLeft /></button>
+          <button onClick={() => changeMonth(1)}><ArrowRight /></button>
+        </div>
       </div>
-   );
+      <div className={styles.days}>
+        <div className={styles.dayLabel}>П</div>
+        <div className={styles.dayLabel}>В</div>
+        <div className={styles.dayLabel}>С</div>
+        <div className={styles.dayLabel}>Ч</div>
+        <div className={styles.dayLabel}>П</div>
+        <div className={styles.dayLabel}>С</div>
+        <div className={styles.dayLabel}>В</div>
+        {getDaysInMonth(currentMonth).map((day, index) => (
+          <div
+            key={index}
+            className={day.date ? getDateClassName(day.date) : styles.blank}
+            onClick={() => day.date && handleDateClick(day.date)}
+          >
+            {day.date ? day.date.getDate() : ''}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (type === 'date') {
+    return (
+      <div className={styles.dateSelector}>
+        <div className={styles.selectedRange}>
+          <span>По дате чеков</span>
+          {getSelectedDateRange() && (
+            <div className={styles.dateRange}>
+              <span>{getSelectedDateRange()}</span>
+              <button onClick={clearSelection}>
+                <Cross />
+              </button>
+            </div>
+          )}
+        </div>
+        {renderCalendar()}
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.dateSelector}>
+      <div 
+        className={`${styles.trigger} ${isOpen ? styles.active : ''}`} 
+        onClick={toggleCalendar}
+      >
+        <div className={styles.icon}><Calendar /></div>
+        <p className={styles.label}>
+          {getSelectedDateRange() || 'По дате'}
+        </p>
+        <div className={`${styles.arrow} ${isOpen ? styles.open : ''}`}>
+          <ArrowRight />
+        </div>
+      </div>
+      {isOpen && (
+        <div className={styles.calendarPopover}>
+          {renderCalendar()}
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default CustomDateSelector;
+export default DateSelector;

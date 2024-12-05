@@ -2,7 +2,7 @@ import React from 'react';
 import s from './active-select.module.scss';
 import CheckBox from '../check-box/check-box';
 import StatusBadge from '../status-badge/status-badge';
-import { ApplicationStatus } from '../../../constants/statuses';
+import { ApplicationStatus, STATUS_LABELS } from '../../../constants/statuses';
 
 interface Option {
   id: string;
@@ -46,8 +46,8 @@ const ActiveSelect: React.FC<ActiveSelectProps> = ({
               isChecked={option.checked}
               setChecked={() => handleCheckboxChange(option.id)}
             />
-            {type === 'status' ? (
-              <StatusBadge status={option.label as ApplicationStatus} />
+            {type === 'status' || type === 'mobile-status' ? (
+              <StatusBadge status={option.id as ApplicationStatus} />
             ) : (
               <span>{option.label}</span>
             )}

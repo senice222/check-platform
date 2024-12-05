@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { ApplicationStatus } from "../../constants/statuses";
+import { type ApplicationStatus } from "../../constants/statuses";
 import StatusBadge from "../ui/status-badge/status-badge";
 import CheckBox from "../ui/check-box/check-box";
 import s from "./changing-status.module.scss";
@@ -18,7 +18,12 @@ const ChangingStatus: FC<ChangingStatusProps> = ({
   isOpened,
   setOpened,
 }) => {
-  const allStatuses: ApplicationStatus[] = ['created', 'issued', 'client_paid', 'us_paid'];
+  const allStatuses = [
+    ApplicationStatus.NEW,
+    ApplicationStatus.IN_PROGRESS,
+    ApplicationStatus.COMPLETED,
+    ApplicationStatus.CANCELLED
+  ];
   const [opened, setOpen] = useState(false);
   const isMobile = window.innerWidth < 1000;
 
@@ -54,7 +59,12 @@ const ChangingStatus: FC<ChangingStatusProps> = ({
 
   return (
     <>
-      <ChooseStatus isOpened={opened} setOpen={setOpen} />
+      <ChooseStatus 
+        isOpened={opened} 
+        setOpen={setOpen} 
+        setStatuses={setStatuses}
+        statuses={statuses}
+      />
       <div
         className={`${s.changingStatus} ${isOpened ? s.opened : ""}`}
         onClick={(e) => e.stopPropagation()}

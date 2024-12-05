@@ -1,77 +1,162 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from "./active-table.module.scss";
-import { ClientAvatar, SearchIcon, TableIcon, CardIcon } from "../../svgs/svgs";
+import { ClientAvatar, SearchIcon, TableIcon, CardIcon, FilterButton, ExportButton, ClientIcon } from "../../svgs/svgs";
 import { TableData } from "../../active-applications/active-applications";
 import StatusBadge from "../../ui/status-badge/status-badge";
-import { ApplicationStatus } from "../../../constants/statuses";
-
+import { ApplicationStatus, STATUS_LABELS } from "../../../constants/statuses";
+import RowMenu from "../../ui/row-menu/row-menu";
+import FilterBottomSheet from "../../modals/filter-bottom-sheet/filter-bottom-sheet";
+import { FilterState } from '../../../types/filter-state';
+//
 interface ActiveTableProps {
   data: TableData[];
+  initialData: TableData[];
+  onDateChange: (start: string, end: string) => void;
+  onSumChange: (from: number | null, to: number | null) => void;
+  onFilterChange: (filters: {
+    clients: string[];
+    companies: string[];
+    sellers: string[];
+    statuses: ApplicationStatus[];
+    sum?: { from: string; to: string };
+  }) => void;
 }
 
-const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
+const formatDate = (dateStr: string) => {
+  const [day, month, year] = dateStr.split('.');
+  return `${day}.${month}.${year.length === 2 ? '20' + year : year}`;
+};
+
+const ActiveTable: React.FC<ActiveTableProps> = ({
+  data,
+  initialData,
+  onDateChange,
+  onFilterChange,
+  onSumChange
+}) => {
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [isMobile, setIsMobile] = useState(false);
-  const [filteredData, setFilteredData] = useState(data);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({
+    date: { start: '', end: '' },
+    users: [],
+    status: '',
+  });
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 600);
     };
 
-    handleResize();
+    setIsMobile(window.innerWidth <= 600);
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const filtered = data.filter(item => 
+  const filteredData = useMemo(() => {
+    return data.filter(item =>
       item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.client.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setFilteredData(filtered);
   }, [searchQuery, data]);
+
+  const getRowMenuOptions = (row: TableData) => [
+    {
+      id: 'profile',
+      label: 'Перейти к заявке',
+      onClick: () => console.log('Переход к заявке', row.id)
+    },
+    {
+      id: 'company',
+      label: 'Профиль компании',
+      onClick: () => console.log('Переход к профилю компании', row.company)
+    },
+    {
+      id: 'client',
+      label: 'Профиль клиента',
+      onClick: () => console.log('Переход к профилю клиента', row.client.name)
+    }
+  ];
+
+  const handleFilterApply = (filters: any) => {
+    onFilterChange(filters);
+    setIsFilterOpen(false);
+  };
+
+  const handleFilterChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+    // Преобразуем мобильные фильтры в десктопный формат
+    const desktopFilters = {
+      clients: newFilters.users.map(user => user.id),
+      companies: newFilters.companies || [],
+      sellers: newFilters.sellers || [],
+      statuses: newFilters.status ? [newFilters.status as ApplicationStatus] : [],
+    };
+    onFilterChange(desktopFilters);
+  };
+
+  const renderMobileHeader = () => {
+    if (!isMobile) return null;
+
+    return (
+      <div className={styles.mobileHeader}>
+        <div className={styles.mobileSearch}>
+          {showSearch && (
+            <input
+              className={styles.search}
+              type="text"
+              placeholder="Поиск по заявкам"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const renderCard = (row: TableData) => (
     <div className={styles.card} key={row.id}>
       <div className={styles.cardHeader}>
-        <span className={styles.cardId}>{row.id}</span>
-        <StatusBadge status={row.status as ApplicationStatus} />
+        <div className={styles.topElement}>
+          <span className={styles.cardId}>{row.id}</span>
+          <div className={styles.statuses}>
+            {row.statuses.map((status, i) => (
+              <StatusBadge key={i} status={status} />
+            ))}
+          </div>
+        </div>
       </div>
       <div className={styles.cardBody}>
-        <div className={styles.cardRow}>
-          <span className={styles.cardLabel}>Компания:</span>
-          <div className={styles.companyDiv}>
+        <div className={styles.buyerSellerRow}>
+          <div className={styles.buyerBlock}>
+            <span className={styles.cardLabel}>Покупатель</span>
             <span className={styles.companyName}>{row.company}</span>
             <span className={styles.inn}>ИНН {row.client.inn}</span>
           </div>
-        </div>
-        <div className={styles.cardRow}>
-          <span className={styles.cardLabel}>Продавец:</span>
-          <div className={styles.companyDiv}>
+          <div className={styles.sellerBlock}>
+            <span className={styles.cardLabel}>Продавец</span>
             <span className={styles.sellerName}>{row.seller}</span>
             <span className={styles.inn}>ИНН {row.client.inn}</span>
           </div>
         </div>
-        <div className={styles.cardRow}>
-          <span className={styles.cardLabel}>Чеки:</span>
-          <div className={styles.companyDiv}>
-            <span className={styles.checks}>{row.checks}</span>
-            <span className={styles.inn}>{row.checksCount} чеков</span>
-          </div>
+        <div className={styles.dateChecksRow}>
+          <span className={styles.date}>{`${formatDate(row.date.start)} → ${formatDate(row.date.end)}`}</span>
+          <span className={styles.checksCount}>{row.checksCount} чеков</span>
         </div>
-        <div className={styles.cardRow}>
-          <span className={styles.cardLabel}>Клиент:</span>
-          <div className={styles.clientDiv}>
-            <ClientAvatar />
-            <span className={styles.clientName}>{row.client.name}</span>
+        <div className={styles.userSumRow}>
+          <div className={styles.userBlock}>
+            <ClientIcon />
+            <span className={styles.userName}>{row.client.name}</span>
           </div>
-        </div>
-        <div className={styles.cardRow}>
-          <span className={styles.cardLabel}>Сумма:</span>
-          <span className={styles.sum}>{row.sum}</span>
+          <div className={styles.sumBlock}>
+            <span className={styles.sumLabel}>Сумма:</span>
+            <span className={styles.sumValue}>${row.sum}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -79,35 +164,48 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
 
   return (
     <>
+      {renderMobileHeader()}
       {isMobile && (
-        <div className={styles.viewToggle}>
-          <button
-            className={`${styles.toggleButton} ${viewMode === 'table' ? styles.active : ''}`}
-            onClick={() => setViewMode('table')}
-          >
-            <TableIcon />
-          </button>
-          <button
-            className={`${styles.toggleButton} ${viewMode === 'cards' ? styles.active : ''}`}
-            onClick={() => setViewMode('cards')}
-          >
-            <CardIcon />
-          </button>
+        <div className={styles.mobileControls}>
+          <div className={styles.leftControls}>
+            <button onClick={() => setIsFilterOpen(true)}>
+              <FilterButton />
+            </button>
+            <button onClick={() => setShowSearch(!showSearch)}>
+              <SearchIcon />
+            </button>
+          </div>
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.toggleButton} ${viewMode === 'table' ? styles.active : ''}`}
+              onClick={() => setViewMode('table')}
+            >
+              <TableIcon />
+            </button>
+            <button
+              className={`${styles.toggleButton} ${viewMode === 'cards' ? styles.active : ''}`}
+              onClick={() => setViewMode('cards')}
+            >
+              <CardIcon />
+            </button>
+          </div>
         </div>
       )}
       <div className={styles.container} data-view-mode={viewMode}>
-        <div className={styles.searchWrapper}>
-          <span className={styles.icon}>
-            <SearchIcon />
-          </span>
-          <input 
-            className={styles.search} 
-            type="text" 
-            placeholder="Поиск по заявкам"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        {!isMobile && (
+          <div className={styles.searchWrapper}>
+            <span className={styles.icon}>
+              <SearchIcon />
+            </span>
+            <input
+              className={styles.search}
+              type="text"
+              placeholder="Поиск по заявкам"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        )}
 
         <table className={styles.table} data-view-mode={viewMode}>
           <thead>
@@ -118,7 +216,8 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
               <th>Продавец</th>
               <th>Чеки</th>
               <th>Клиент</th>
-              <th>Сумма</th>
+              <th>Сума</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -126,7 +225,14 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
               <tr key={row.id}>
                 <td>{row.id}</td>
                 <td>
-                  <StatusBadge status={row.status as ApplicationStatus} />
+                  <div className={styles.statusContainer}>
+                    {row.statuses.map((status, index) => (
+                      <StatusBadge
+                        key={`${row.id}-${status}-${index}`}
+                        status={status}
+                      />
+                    ))}
+                  </div>
                 </td>
                 <td>
                   <div className={styles.companyDiv}>
@@ -142,7 +248,7 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
                 </td>
                 <td>
                   <div className={styles.companyDiv}>
-                    <span className={styles.checks}>{row.checks}</span>
+                    <span className={styles.checks}>{`${formatDate(row.date.start)} – ${formatDate(row.date.end)}`}</span>
                     <span className={styles.inn}>{row.checksCount} чеков</span>
                   </div>
                 </td>
@@ -153,6 +259,9 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
                   </div>
                 </td>
                 <td className={styles.sum}>{row.sum}</td>
+                <td>
+                  <RowMenu options={getRowMenuOptions(row)} />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -162,6 +271,17 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ data }) => {
           {filteredData.map((row) => renderCard(row))}
         </div>
       </div>
+
+      <FilterBottomSheet
+        onSumChange={onSumChange}
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onFiltersChange={handleFilterChange}
+        data={data}
+        initialData={initialData}
+        onDateChange={onDateChange}
+      />
     </>
   );
 };

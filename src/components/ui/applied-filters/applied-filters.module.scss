@@ -3,6 +3,10 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
+
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
 }
 
 .filterItem {

@@ -1,69 +1,28 @@
-.status {
-  border-radius: 8px;
-  padding: 4px 6px;
-  
-  p {
-    font-weight: 500;
-    font-size: 14px;
-    margin: 0;
-  }
-
-  &.purple {
-    background-color: #ecdffb;
-    p {
-      color: #5314a3;
-    }
-    &.bordered {
-      border: 1px solid #0A0F2914;
-    }
-  }
-
-  &.orange {
-    background-color: #fdead8;
-    p {
-      color: #ae590a;
-    }
-    &.bordered {
-      border: 1px solid #0A0F2914;
-    }
-  }
-
-  &.blue {
-    background-color: #e3eafd;
-    p {
-      color: #133a9a;
-    }
-    &.bordered {
-      border: 1px solid #0A0F2914;
-    }
-  }
-
-  &.green {
-    background-color: #d1fae4;
-    p {
-      color: #166e3f;
-    }
-    &.bordered {
-      border: 1px solid #0A0F2914;
-    }
-  }
-
-  &.elit {
-    background-color: #FDEAD8;
-    p {
-      color: #AE590A;
-    }
-  }
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
 }
 
-.bordered {
-  padding: 2px 4px !important;
-  p {
-    font-size: 12px !important;
-  }
-} 
-.big {
-  display: flex;
-  align-items: center;
-  height: 28px;
+.created {
+  background-color: #ecdffb;
+  color: #5314a3;
+}
+
+.issued {
+  background-color: #fdead8;
+  color: #ae590a;
+}
+
+.client_paid {
+  background-color: #d1fae4;
+  color: #166e3f;
+}
+
+.us_paid {
+  background-color: #e3eafd;
+  color: #133a9a;
 }

@@ -1,0 +1,58 @@
+.content {
+    h1 {
+        color: #14151A;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+    }
+    .desk {
+        margin-top: 15px;
+        color: #0F132499;
+        font-size: 16px;
+        font-weight: 400;
+    }
+    
+}
+.content {
+    margin-top: 20px;
+    .gratText {
+        margin-top: 10px;
+        display: flex;
+        gap: 5px;
+        p {
+            color: #0D112666;
+            font-weight: 400;
+            font-size: 14px;
+        }
+    }
+
+    .chekboxDiv {
+        cursor: pointer;
+        margin-top: 25px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 5px;
+        p {
+            width: 95%;
+            color: #14151A;
+            font-weight: 500;
+            font-size: 14px;
+        }
+    }
+}
+.actions {
+    display: flex;
+    margin-top: 25px;
+    justify-content: space-between;
+}
+@media screen and (max-width: 1000px) {
+    
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+        button {
+            width: 100% !important;
+        }
+    }
+}

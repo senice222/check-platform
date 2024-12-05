@@ -7,8 +7,11 @@ import checki from '../../assets/4eki.png'
 import clients from '../../assets/clients.png'
 import companies from '../../assets/companies.png'
 import settings from '../../assets/settings.png'
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
+   const navigate = useNavigate();
+   const location = useLocation();
 
    return (
       <div
@@ -25,18 +28,27 @@ const Sidebar = () => {
             <img src={logout} className={styles.logout} alt="/" />
          </div>
          <ul className={styles.menu}>
-            <li className={`${styles.item} ${styles.active}`}>
+            <li 
+               className={`${styles.item} ${location.pathname === '/admin/active-applications' ? styles.active : ''}`}
+               onClick={() => navigate('/admin/active-applications')}
+            >
                <img src={active} alt="/" />
                Активные заявки
                <div className={styles.badgeDiv}>
                   <span className={styles.badge}>3</span>
                </div>
             </li>
-            <li className={styles.item}>
+            <li 
+               className={`${styles.item} ${location.pathname === '/admin/applications' ? styles.active : ''}`}
+               onClick={() => navigate('/admin/applications')}
+            >
                <img src={applications} alt="/" />
                Заявки
             </li>
-            <li className={styles.item}>
+            <li 
+               className={`${styles.item} ${location.pathname === '/admin/checks' ? styles.active : ''}`}
+               onClick={() => navigate('/admin/checks')}
+            >
                <img src={checki} alt="/" />
                Чеки
             </li>

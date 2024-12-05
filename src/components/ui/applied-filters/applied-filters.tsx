@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './applied-filters.module.scss';
 import { Cross as Close } from '../../svgs/svgs';
+import { ApplicationStatus, STATUS_LABELS } from '../../../constants/statuses';
 
 interface AppliedFiltersProps {
   dateFilter?: string;
@@ -53,7 +54,9 @@ const AppliedFilters: React.FC<AppliedFiltersProps> = ({
 
     const displayText = values.length > 1 
       ? `${values.length} выбрано`
-      : truncateText(values[0]);
+      : type === 'status' 
+        ? STATUS_LABELS[values[0] as ApplicationStatus]
+        : truncateText(values[0]);
 
     return (
       <div className={styles.filterItem}>
@@ -95,14 +98,14 @@ const AppliedFilters: React.FC<AppliedFiltersProps> = ({
     let displayText = '';
 
     if (start && end) {
-      displayText = `По дате: ${start} - ${end}`;
+      displayText = `${start} – ${end}`;
     } else if (start) {
-      displayText = `По дате: от ${start}`;
+      displayText = `от ${start}`;
     }
 
     return (
       <div className={styles.filterItem}>
-        <span>{displayText}</span>
+        <span>По дате: {displayText}</span>
         <button onClick={onRemoveDateFilter}>
           <Close />
         </button>

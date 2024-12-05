@@ -14,3 +14,28 @@
     min-width: 200px;
   }
 }
+
+.mobileView {
+  display: flex !important;
+}
+
+@media (max-width: 600px) {
+  .filterContainer {
+    margin: 0;
+    display: none;
+
+    &.mobileView {
+      display: flex;
+    }
+  }
+
+  .selectGroup {
+    flex-direction: column;
+    gap: 16px;
+
+    [data-select-type] {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+}

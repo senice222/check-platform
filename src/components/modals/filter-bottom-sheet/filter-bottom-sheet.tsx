@@ -46,22 +46,17 @@ const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
     if (isOpen) {
       setIsVisible(true);
       setIsClosing(false);
-      document.body.style.overflow = 'hidden';
     } else {
-      setIsClosing(true);
-      document.body.style.overflow = 'unset';
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 300);
-      return () => clearTimeout(timer);
+      handleClose();
     }
   }, [isOpen]);
 
   const handleClose = () => {
     setIsClosing(true);
-    document.body.style.overflow = 'unset';
     setTimeout(() => {
       onClose();
+      setIsVisible(false);
+      setIsClosing(false);
     }, 300);
   };
 
@@ -107,7 +102,7 @@ const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
 
   return (
     <div className={`${styles.wrapper} ${isVisible ? styles.visible : ''}`}>
-      <div className={`${styles.overlay} ${isClosing ? styles.closing : ''}`} onClick={handleClose}>
+      <div className={`${styles.overlay} ${isClosing ? styles.closing2 : ''}`} onClick={handleClose}>
         <div 
           ref={sheetRef}
           className={`${styles.sheet} ${isClosing ? styles.closing : ''}`}

@@ -22,16 +22,18 @@ import IsEditingBar from "../../is-editing-bar/is-editing-bar";
 import ChooseStatus from "../../modals/choose-status/chose-status";
 
 interface PageTitleProps {
-  title: string;
+  title?: string;
   statuses?: ApplicationStatus[];
   setStatuses?: (statuses: ApplicationStatus[]) => void;
   date?: string;
   name?: string;
+  responsive_name?: string;
   editing?: boolean;
   setEditing?: (value: boolean) => void;
   noRightBtns?: boolean;
   isUser?: boolean;
   userDeskr?: string,
+  responsive_btns?: {text: string, onClick: () => void}[],
   handleUpdateUser? : () => void,
   setOpen?: () => void
 }
@@ -48,6 +50,8 @@ const PageTitle: FC<PageTitleProps> = ({
   editing = false,
   userDeskr,
   setEditing,
+  responsive_name,
+  responsive_btns,
   setOpen
 }) => {
   const [statusesOpened, setStatusesOpened] = useState(false);
@@ -60,6 +64,9 @@ const PageTitle: FC<PageTitleProps> = ({
   };
 
   const handleEdit = () => {
+    if (isUser) {
+      return setOpen && setOpen();
+    }
     setEditing?.(true);
   };
 
@@ -180,8 +187,8 @@ const PageTitle: FC<PageTitleProps> = ({
           {editing ? <span onClick={handleCancel}>Отмена</span> : <><TopArrow />
             <span>Назад</span></>}
         </div>
-        <h2>Заявка #01</h2>
-        {editing ? (
+        <h2>{responsive_name}</h2>
+        {responsive_btns ? responsive_btns.map((btn) => <button className={s.editBtn} onClick={btn.onClick}>{btn.text}</button>) : editing ? (
           <button onClick={handleSave} className={s.editBtn}>Сохранить</button>
         ) : (
           <button onClick={handleEdit} className={s.editBtn}>Изменить</button>
@@ -196,10 +203,10 @@ const PageTitle: FC<PageTitleProps> = ({
             <BackArrow />
           </div>
           <div className={s.right}>
-            <div className={s.top}>
+            <div className={`${s.top} ${isUser ? s.topUser : ''}`}>
               {isUser && <div className={s.userIconSvg}><UserIcon /></div>}
               <div className={s.titleDivUser}>
-                <h1 className={s.title}>{title}</h1>
+                {title && <h1 className={s.title}>{title}</h1>}
                 {isUser && <p>{userDeskr}</p>}
               </div>
               {renderStatusBadges()}

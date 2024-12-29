@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import styles from './date-selector.module.scss';
-import { Calendar, Cross, ArrowLeft, ArrowRight } from '../../svgs/svgs';
+import { Calendar, Cross, ArrowLeft, ArrowRight, ArrowSelect } from '../../svgs/svgs';
 
 interface DateSelectorProps {
-  onDateChange: (start: string, end: string) => void;
+  onDateChange: (start: string, end?: string) => void;
+  fullWidth?: boolean;
+  closeOnClickOutside?: boolean;
+  singleDate?: boolean;
+  inputStyle?: boolean;
+  label?: string;
   type?: string;
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({ onDateChange, type }) => {
+const DateSelector: React.FC<DateSelectorProps> = ({ 
+  onDateChange, 
+  fullWidth = false,
+  closeOnClickOutside = false,
+  singleDate = false,
+  inputStyle = false,
+  label,
+  type
+}) => {
   const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -22,6 +35,13 @@ const DateSelector: React.FC<DateSelectorProps> = ({ onDateChange, type }) => {
   };
 
   const handleDateClick = (date: Date) => {
+    if (singleDate) {
+        setSelectedStartDate(date);
+        setSelectedEndDate(null);
+        setIsOpen(false);
+        return;
+    }
+    
     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
       setSelectedStartDate(date);
       setSelectedEndDate(null);
@@ -58,7 +78,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ onDateChange, type }) => {
 
   const getSelectedDateRange = () => {
     if (!selectedStartDate) return '';
-    if (!selectedEndDate) return formatDate(selectedStartDate);
+    if (singleDate || !selectedEndDate) return formatDate(selectedStartDate);
     return `${formatDate(selectedStartDate)} – ${formatDate(selectedEndDate)}`;
   };
 
@@ -154,6 +174,54 @@ const DateSelector: React.FC<DateSelectorProps> = ({ onDateChange, type }) => {
     </div>
   );
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const wrapper = target.closest(`.${styles.inputStyleWrapper}`);
+      const calendar = target.closest(`.${styles.calendarPopover}`);
+      
+      if (closeOnClickOutside && !wrapper && !calendar) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, closeOnClickOutside]);
+
+  if (inputStyle) {
+    return (
+      <div className={styles.inputStyleWrapper}>
+        {label && <label className={styles.label}>{label}</label>}
+        <div 
+          className={`${styles.inputStyleTrigger} ${isOpen ? styles.active : ''}`} 
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleCalendar();
+          }}
+        >
+          <span className={styles.value}>
+            {getSelectedDateRange() || 'Выберите дату'}
+          </span>
+          <ArrowSelect className={`${styles.arrow} ${isOpen ? styles.open : ''}`} />
+        </div>
+        {isOpen && (
+          <div 
+            className={styles.calendarPopover}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {renderCalendar()}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (type === 'date') {
     return (
       <div className={styles.dateSelector}>
@@ -174,7 +242,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ onDateChange, type }) => {
   }
 
   return (
-    <div className={styles.dateSelector}>
+    <div className={`${styles.dateSelector} ${fullWidth ? styles.fullWidth : ''}`}>
       <div 
         className={`${styles.trigger} ${isOpen ? styles.active : ''}`} 
         onClick={toggleCalendar}

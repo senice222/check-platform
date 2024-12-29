@@ -1,0 +1,254 @@
+.warningWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .warningContent {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 510px;
+
+        svg {
+            width: 144px;
+            height: 144px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #14151A;
+
+            span {
+                color: #E6483D;
+            }
+        }
+
+        p {
+            font-size: 16px;
+            font-weight: 400;
+            color: #0F132499;
+
+            span {
+                color: #E6483D;
+            }
+        }
+
+        .warningButtons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .warningButton {
+            height: 40px;
+            border: 0;
+            padding: 0 12px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: .2s;
+            font-weight: 500;
+            border-radius: 12px;
+        }
+
+        .warningButtonRed {
+            background-color: #E6483D;
+            color: #fff;
+
+            &:hover {
+                background-color: #e92618;
+            }
+        }
+
+        .warningButtonWhite {
+            background-color: #fff;
+            border: 1px solid #DEE0E3;
+            color: #14151A;
+
+            &:hover {
+                background-color: #f3f3f3;
+            }
+        }
+    }
+    @media screen and (max-width: 768px) {
+        padding: 16px;
+        h1 {
+            font-size: 18px;
+        }
+        p {
+            font-size: 16px;
+        }
+        .warningButtons {
+            flex-direction: column;
+            
+        }
+    }
+}
+
+.accessSection {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+
+    .accessSectionHeader {
+        margin-top: 25px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #14151A;
+        }
+    }
+
+    .attention {
+        margin-top: 30px;
+        display: flex;
+        gap: 12px;
+        border-radius: 10px;
+        background-color: #FDF2F1;
+        padding: 16px;
+
+        svg {
+            min-width: 20px;
+            height: 20px;
+
+            path {
+                fill: #E6483D;
+            }
+        }
+
+        .attentionContent {
+
+            color: #14151A;
+
+            h1 {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            p {
+                margin-top: 4px;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 20px;
+                color: #0F132499;
+            }
+        }
+        button {
+            height: 32px;
+            border: 0;
+            padding: 0 12px;
+            cursor: pointer;
+            min-width: 242px;
+            font-size: 14px;
+            transition: .2s;
+            font-weight: 500;
+            border-radius: 12px;
+            background-color: #fff;
+            border: 1px solid #DEE0E3;
+            color: #14151A;
+
+            &:hover {
+                background-color: #f3f3f3;
+            }
+        }
+        
+    }
+}
+
+.tableContainer {
+    background: #FFFFFF;
+    border: 1px solid #DEE0E3;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 24px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #F7F7F8;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    th {
+        color: #0F132499;
+        font-weight: 400;
+        background-color: #F8F8F8;
+    }
+
+    td {
+        color: #333;
+    }
+}
+
+.userCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .userName {
+        color: #924FE8;
+        font-weight: 500;
+        font-size: 14px;
+        text-decoration: underline;
+    }
+}
+
+.headerButtons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.mobileOnly {
+    display: none;
+}
+.pagetitile {
+    display: none;
+}
+@media screen and (max-width: 768px) {
+    .pagetitile {
+        display: block;
+        width: 100%;
+    }
+    .attention {
+        margin-top: 0 !important;
+        margin: 0 16px;
+        flex-direction: column;
+    }
+    .accessSectionHeader {
+        display: none !important;
+    }
+    .mobileOnly {
+        display: flex;
+    }
+
+    .accessSectionHeader {
+        padding: 0 16px;
+        
+        h1 {
+            font-size: 16px;
+        }
+    }
+
+    .tableContainer {
+        margin-top: 16px;
+    }
+}

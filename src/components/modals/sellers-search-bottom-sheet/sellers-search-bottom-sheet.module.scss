@@ -1,0 +1,82 @@
+.content {
+  padding: 16px;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #DEE0E3;
+  border-radius: 8px;
+  margin-bottom: 16px;
+
+  svg path {
+    fill: #0D112666;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  
+  &::placeholder {
+    color: #0D112666;
+  }
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sellerItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #DEE0E3;
+  border-radius: 8px;
+}
+
+.sellerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sellerName {
+  font-weight: 500;
+  font-size: 14px;
+  color: #4778F5;
+  text-decoration: underline;
+
+  &.elite {
+    color: #AE590A;
+  }
+}
+
+.inn {
+  color: #0F132499;
+  font-size: 12px;
+}
+
+.typeBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.elite {
+    background-color: #FDEAD8;
+    color: #AE590A;
+  }
+
+  &.white {
+    background-color: #E3EAFD;
+    color: #133A9A;
+  }
+} 

@@ -7,6 +7,8 @@ import { ApplicationStatus, STATUS_LABELS } from "../../../constants/statuses";
 import RowMenu from "../../ui/row-menu/row-menu";
 import FilterBottomSheet from "../../modals/filter-bottom-sheet/filter-bottom-sheet";
 import { FilterState } from '../../../types/filter-state';
+import ApplicationsSearchBottomSheet from '../../modals/applications-search-bottom-sheet/applications-search-bottom-sheet';
+import { useNavigate } from 'react-router-dom';
 //
 interface ActiveTableProps {
   data: TableData[];
@@ -44,7 +46,7 @@ const ActiveTable: React.FC<ActiveTableProps> = ({
     users: [],
     status: '',
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 600);
@@ -103,24 +105,25 @@ const ActiveTable: React.FC<ActiveTableProps> = ({
     if (!isMobile) return null;
 
     return (
-      <div className={styles.mobileHeader}>
-        <div className={styles.mobileSearch}>
-          {showSearch && (
-            <input
-              className={styles.search}
-              type="text"
-              placeholder="Поиск по заявкам"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          )}
-        </div>
-      </div>
+      null
+      // <div className={styles.mobileHeader}>
+      //   <div className={styles.mobileSearch}>
+      //     {showSearch && (
+      //       <input
+      //         className={styles.search}
+      //         type="text"
+      //         placeholder="Поиск по заявкам"
+      //         value={searchQuery}
+      //         onChange={(e) => setSearchQuery(e.target.value)}
+      //       />
+      //     )}
+      //   </div>
+      // </div>
     );
   };
 
   const renderCard = (row: TableData) => (
-    <div className={styles.card} key={row.id}>
+    <div onClick={() => navigate(`/admin/application/${213}`)} className={styles.card} key={row.id}>
       <div className={styles.cardHeader}>
         <div className={styles.topElement}>
           <span className={styles.cardId}>{row.id}</span>
@@ -222,7 +225,7 @@ const ActiveTable: React.FC<ActiveTableProps> = ({
           </thead>
           <tbody>
             {filteredData.map((row) => (
-              <tr key={row.id}>
+              <tr onClick={() => navigate(`/admin/application/${2141}`)} key={row.id}>
                 <td>{row.id}</td>
                 <td>
                   <div className={styles.statusContainer}>
@@ -281,6 +284,14 @@ const ActiveTable: React.FC<ActiveTableProps> = ({
         data={data}
         initialData={initialData}
         onDateChange={onDateChange}
+      />
+
+      <ApplicationsSearchBottomSheet
+        isOpen={showSearch}
+        onClose={() => setShowSearch(false)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        applications={data}
       />
     </>
   );

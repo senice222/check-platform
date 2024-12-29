@@ -28,7 +28,7 @@ const Sidebar = () => {
             <img src={logout} className={styles.logout} alt="/" />
          </div>
          <ul className={styles.menu}>
-            <li 
+            <li
                className={`${styles.item} ${location.pathname === '/admin/active-applications' ? styles.active : ''}`}
                onClick={() => navigate('/admin/active-applications')}
             >
@@ -38,29 +38,30 @@ const Sidebar = () => {
                   <span className={styles.badge}>3</span>
                </div>
             </li>
-            <li 
+            <li
                className={`${styles.item} ${location.pathname === '/admin/applications' ? styles.active : ''}`}
                onClick={() => navigate('/admin/applications')}
             >
                <img src={applications} alt="/" />
                Заявки
             </li>
-            <li 
+            <li
                className={`${styles.item} ${location.pathname === '/admin/checks' ? styles.active : ''}`}
                onClick={() => navigate('/admin/checks')}
             >
                <img src={checki} alt="/" />
                Чеки
             </li>
-            <li className={styles.item}>
+            <li className={`${styles.item} ${location.pathname === '/admin/clients' ? styles.active : ''}`}
+               onClick={() => navigate('/admin/clients')}>
                <img src={companies} alt="/" />
                Клиенты
             </li>
-            <li className={styles.item}>
+            <li className={styles.item} onClick={() => navigate('/admin/companies')}>
                <img src={active} alt="/" />
                Компании
             </li>
-            <li className={styles.item}>
+            <li onClick={() => navigate('/admin/settings/sellers')} className={styles.item}>
                <img src={settings} alt="/" />
                Настройки
             </li>

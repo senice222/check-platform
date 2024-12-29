@@ -1,0 +1,74 @@
+.selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.selectButton {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #DEE0E3;
+  box-shadow: 0px 1px 2px 0px #14151A0D;
+  border-radius: 12px;
+  background: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  .placeholder {
+    color: #0D112666;
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+    path {
+      fill: #0D112666;
+    }
+  }
+
+  &[data-open="true"] svg {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #DEE0E3;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  padding: 4px;
+}
+
+.option {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #F4F5F6;
+  }
+}
+
+.typeBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.elite {
+    background-color: #FDEAD8;
+    color: #AE590A;
+  }
+
+  &.white {
+    background-color: #E3EAFD;
+    color: #133A9A;
+  }
+} 

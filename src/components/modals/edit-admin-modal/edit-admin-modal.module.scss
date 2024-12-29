@@ -1,0 +1,91 @@
+.content {
+    margin-top: 20px;
+}
+
+.inputWrapper {
+    margin-top: 20px;
+    position: relative;
+}
+
+.passwordInput {
+    position: relative;
+    margin-top: 20px;
+    
+    .generateBtn {
+        position: absolute;
+        right: 0;
+        top: 27px;
+        height: 32px;
+        padding: 0 8px;
+        background: none;
+        border: none;
+        border-left: 1px solid #DEE0E3;
+        color: #924FE8;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        
+        &:hover {
+            color: #7B3DD7;
+        }
+    }
+}
+
+.copyBtn {
+    position: absolute;
+    right: 0;
+    top: 27px;
+    height: 32px;
+    padding: 0 8px;
+    background: none;
+    border: none;
+    border-left: 1px solid #DEE0E3;
+    color: #924FE8;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    
+    &:hover {
+        color: #7B3DD7;
+    }
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .userName {
+        font-size: 16px;
+        font-weight: 500;
+        color: #14151A;
+    }
+}
+
+.actions {
+    display: flex;
+    margin-top: 25px;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 1000px) {
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+        button {
+            width: 100% !important;
+        }
+    }
+} 

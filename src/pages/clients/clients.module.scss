@@ -1,0 +1,335 @@
+.clients {
+    width: 100%;
+    // padding: 24px;
+
+    .clients_header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #14151A;
+            margin: 0;
+        }
+    }
+
+    .tableContainer {
+        background: #FFFFFF;
+        border: 1px solid #DEE0E3;
+        border-radius: 10px;
+        overflow: hidden;
+        min-width: 1000px;
+
+        .searchWrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #DEE0E3;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            padding-left: 16px;
+
+            .icon {
+                display: flex;
+                align-items: center;
+            }
+
+            .search {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                font-size: 14px;
+                outline: none;
+
+                &::placeholder {
+                    color: #0D112666;
+                }
+            }
+        }
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #F7F7F8;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        th {
+            color: #0F132499;
+            font-weight: 400;
+            background-color: #F8F8F8;
+        }
+
+        td {
+            color: #333;
+        }
+
+
+    }
+}
+
+.userCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .userName {
+        color: #924FE8;
+        font-weight: 500;
+        font-size: 14px;
+        text-decoration: underline;
+
+    }
+}
+
+@media (max-width: 768px) {
+    .clients {
+        padding: 16px;
+
+        .clients_header {
+            margin-bottom: 16px;
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+
+        .tableContainer {
+            overflow-x: auto;
+            position: absolute;
+            left: 0;
+            width: 100vw;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+            box-shadow: none;
+        }
+    }
+}
+
+.mobileControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .leftControls {
+        display: flex;
+        gap: 8px;
+
+        button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #DEE0E3;
+            border-radius: 8px;
+            padding: 0;
+            cursor: pointer;
+
+            &:hover {
+                border-color: #924FE8;
+
+                svg path {
+                    fill-opacity: 1;
+                }
+            }
+        }
+    }
+
+    .viewToggle {
+        display: flex;
+        gap: 0;
+
+        button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #dee0e3;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            &:first-child {
+                border-radius: 8px 0 0 8px;
+            }
+
+            &:last-child {
+                border-radius: 0 8px 8px 0;
+                border-left: none;
+            }
+
+            &:hover:not(.active) {
+                background-color: #F4F5F6;
+            }
+
+            &.active {
+                background: #924FE8;
+                border-color: #924FE8;
+
+                svg path {
+                    fill: white;
+                    fill-opacity: 1;
+                }
+
+                &:not(:last-child) {
+                    border-right: 1px solid #924FE8;
+                }
+            }
+        }
+    }
+}
+
+.card {
+    border: 1px solid #dee0e3;
+    border-radius: 12px;
+    padding: 16px;
+    background: white;
+    margin-bottom: 8px;
+
+    .cardBody {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .top {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cardInfo {
+        display: flex;
+        // flex-wrap: wrap;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .header_clients {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .infoRow {
+        display: flex;
+        // justify-content: space-between;
+        align-items: center;
+
+        .label {
+            color: #0F132499;
+            font-size: 14px;
+        }
+
+        .value {
+            margin-left: 4px;
+            color: #14151A;
+            font-weight: 500;
+            font-size: 14px;
+        }
+    }
+
+    .cardActions {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.cardsContainer {
+    display: none;
+    // padding: 16px;
+}
+
+@media screen and (max-width: 600px) {
+    .clients {
+        padding: 16px;
+
+        .clients_header {
+            margin-bottom: 16px;
+
+            h1 {
+                font-size: 20px;
+            }
+
+            button {
+                display: none;
+            }
+        }
+    }
+
+    .tableContainer {
+        &[data-view-mode='table'] {
+            position: absolute;
+            left: 0;
+            width: 100vw;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+            box-shadow: none;
+            min-width: unset;
+
+            .cardsContainer {
+                display: none;
+            }
+
+            .table {
+                display: table;
+            }
+        }
+
+        &[data-view-mode='cards'] {
+            position: static;
+            border: none;
+            box-shadow: none;
+            min-width: unset;
+            width: 100%;
+
+            .table {
+                display: none;
+            }
+
+            .cardsContainer {
+                display: block;
+            }
+        }
+    }
+
+    .searchWrapper {
+        margin: 0 16px 16px;
+        border-radius: 8px;
+    }
+
+    .table {
+
+        td,
+        th {
+            &:first-child {
+                padding-left: 16px;
+            }
+
+            &:last-child {
+                padding-right: 16px;
+            }
+        }
+    }
+}

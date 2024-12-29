@@ -1,0 +1,92 @@
+.container {
+  // padding: 24px;
+}
+
+.infoBlock {
+  margin-bottom: 32px;
+}
+
+.title {
+  margin-top: 20px;
+  color: #14151a;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.doubleInfo {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.infoDiv {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1px;
+  padding: 12px;
+  background-color: #F7F7F8;
+  border: 1px solid #DEE0E3;
+  p {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.label {
+  color: #0F132499;
+}
+
+.value {
+  color: #14151A;
+}
+
+.applicationsBlock, .checksBlock {
+  margin-top: 20px;
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #14151A;
+      margin: 0;
+    }
+  }
+}
+
+.checksBlock {
+  margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .doubleInfo {
+    gap: 12px;
+  }
+
+  .infoDiv {
+    flex: 1;
+    min-width: unset;
+  }
+
+  .value {
+    font-size: 20px;
+  }
+
+  .applicationsBlock, .checksBlock {
+    .header {
+      display: none;
+    }
+  }
+} 

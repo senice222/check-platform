@@ -1,0 +1,258 @@
+.container {
+  width: 100%;
+  margin-top: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee0e3;
+  overflow-x: auto;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #DEE0E3;
+  padding: 8px 16px;
+
+  .icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .search {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+
+    &::placeholder {
+      color: #0D112666;
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #f7f7f8;
+  }
+
+  th {
+    font-weight: 400;
+    color: #0F132499;
+    background-color: #f8f8f8;
+    white-space: nowrap;
+  }
+
+  td {
+    color: #333;
+    white-space: nowrap;
+  }
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
+
+  .userName {
+    color: #924FE8;
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: underline;
+  }
+}
+
+.mobileControls {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 16px;
+
+  .leftControls {
+    display: flex;
+    gap: 8px;
+
+    button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 1px solid #DEE0E3;
+      border-radius: 8px;
+      padding: 0;
+      cursor: pointer;
+    }
+  }
+
+  .viewToggle {
+    display: flex;
+    gap: 0;
+
+    button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #dee0e3;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+        border-left: none;
+      }
+
+      &.active {
+        background: #924FE8;
+        border-color: #924FE8;
+        svg path {
+          fill: white;
+        }
+      }
+    }
+  }
+}
+
+.card {
+  background: white;
+  border: 1px solid #DEE0E3;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 8px;
+  position: relative;
+
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .userInfo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      svg {
+        min-width: 32px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .userDetails {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .userName {
+      color: #924FE8;
+      font-weight: 500;
+      font-size: 14px;
+      text-decoration: underline;
+    }
+
+    .cardActions {
+      padding-top: 2px;
+      margin-right: -8px;
+
+      :global(.menuDropdown) {
+        right: auto;
+        left: -140px;
+        top: calc(100% + 4px);
+      }
+    }
+  }
+
+  .cardBody {
+    margin-top: 12px;
+
+    .infoRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .label {
+        color: #0F132499;
+        font-size: 14px;
+      }
+
+      .value {
+        color: #14151A;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.cardsContainer {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .mobileControls {
+    display: flex;
+    margin-top: 16px;
+  }
+
+  .container {
+    width: 100%;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+    margin: 0;
+
+    &[data-view-mode='cards'] {
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0 16px;
+    }
+  }
+
+  .table[data-view-mode='cards'] {
+    display: none;
+  }
+  
+  .cardsContainer[data-view-mode='table'] {
+    display: none;
+  }
+  
+  .cardsContainer[data-view-mode='cards'] {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .table {
+    td:last-child {
+      position: relative;
+      padding-right: 16px;
+      min-width: 40px;
+    }
+  }
+
+  .userCell {
+    svg {
+      min-width: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+} 

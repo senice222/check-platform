@@ -21,6 +21,13 @@
        color: white;
    }
 }
+.purpleIcon {
+   svg {
+      path {
+         fill: white;
+      }
+   }
+}
 .whiteBtn {
    background-color: transparent;
    p {
@@ -31,6 +38,15 @@
    border: 1px solid #DEE0E3;
    &:hover {
       background-color: #ebebeb !important;
+   }
+}
+.dangerBtn {
+   background-color: #FF4D4D;
+   p {
+      color: white !important;
+   }
+   &:hover {
+      background-color: #e94545!important;
    }
 }
 

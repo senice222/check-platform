@@ -1,5 +1,5 @@
 .pageContainer {
-   padding: 24px;
+   // padding: 24px;
 }
 
 .header {
@@ -69,4 +69,150 @@
    .mobileHeader {
       display: block;
    }
+} 
+
+.mobileControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .leftControls {
+    display: flex;
+    gap: 8px;
+
+    button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 1px solid #DEE0E3;
+      border-radius: 8px;
+      padding: 0;
+      cursor: pointer;
+    }
+  }
+
+  .viewToggle {
+    display: flex;
+    gap: 0;
+
+    button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #dee0e3;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+        border-left: none;
+      }
+
+      &.active {
+        background: #924FE8;
+        border-color: #924FE8;
+        svg path {
+          fill: white;
+        }
+      }
+    }
+  }
+}
+
+.card {
+  border: 1px solid #dee0e3;
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+  margin-bottom: 8px;
+
+  .cardBody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .idDate {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .id {
+      font-weight: 500;
+      font-size: 14px;
+      color: #14151A;
+    }
+
+    .date {
+      color: #0F132499;
+      font-size: 14px;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .companyBlock, .sellerBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .label {
+      color: #0F132499;
+      font-size: 14px;
+    }
+
+    .companyName, .sellerName {
+      color: #924FE8;
+      font-weight: 500;
+      font-size: 14px;
+      text-decoration: underline;
+    }
+
+    .inn {
+      color: #0F132499;
+      font-size: 12px;
+    }
+  }
+
+  .priceBlock {
+    margin-top: 4px;
+
+    .priceRow {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .label {
+        color: #0F132499;
+        font-size: 14px;
+      }
+
+      .value {
+        color: #14151A;
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
 } 

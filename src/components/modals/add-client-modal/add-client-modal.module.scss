@@ -1,0 +1,116 @@
+.content {
+    h1 {
+        color: #14151A;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+    }
+    .desk {
+        margin-top: 15px;
+        color: #0F132499;
+        font-size: 16px;
+        font-weight: 400;
+    }
+    
+}
+.content {
+    margin-top: 20px;
+    .gratText {
+        margin-top: 10px;
+        display: flex;
+        gap: 5px;
+        p {
+            color: #0D112666;
+            font-weight: 400;
+            font-size: 14px;
+        }
+    }
+
+    .chekboxDiv {
+        cursor: pointer;
+        margin-top: 25px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 5px;
+        p {
+            width: 95%;
+            color: #14151A;
+            font-weight: 500;
+            font-size: 14px;
+        }
+    }
+}
+.actions {
+    display: flex;
+    margin-top: 25px;
+    justify-content: space-between;
+}
+.success {
+    width: 100%;
+    .success_header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        svg {
+            width: 40px;
+            height: 40px;
+        }
+        p {
+            font-size: 16px;
+            font-weight: 500;
+        }
+    }
+    .linkDiv {
+        width: 100%;
+        display: flex;
+        margin-top: 15px;
+        flex-direction: column;
+        gap: 10px;
+        .text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #14151A;
+        }
+        .link {
+            width: 100%;
+            display: flex;
+            border: 1px solid #DEE0E3;
+            border-radius: 12px;
+            // padding: 10px 12px;
+            height: 40px;
+            display: flex;
+            padding-left: 12px;
+            justify-content: space-between;
+            align-items: center;
+            .copy {
+                width: 120px;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-left: 1px solid #DEE0E3;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 500;
+                color: #14151A;
+            }
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: #14151A;
+            }
+        }
+    }
+}
+@media screen and (max-width: 1000px) {
+    
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+        button {
+            width: 100% !important;
+        }
+    }
+}

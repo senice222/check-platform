@@ -1,0 +1,281 @@
+.container {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee0e3;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  display: table;
+
+  th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #f7f7f8;
+  }
+
+  th {
+    font-weight: 400;
+    color: #0F132499;
+    background-color: #f8f8f8;
+    white-space: nowrap;
+
+    &:last-child {
+      width: 40px;
+    }
+  }
+
+  td {
+    color: #333;
+    white-space: nowrap;
+
+    &:last-child {
+      padding: 0 8px;
+    }
+  }
+}
+
+.companyDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .companyName {
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: underline;
+    color: #4778F5;
+
+    &.elite {
+      color: #AE590A;
+    }
+  }
+
+  .inn {
+    color: #0F132499;
+    font-size: 12px;
+  }
+}
+
+.typeBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.elite {
+    background-color: #FDEAD8;
+    color: #AE590A;
+  }
+
+  &.white {
+    background-color: #E3EAFD;
+    color: #133A9A;
+  }
+}
+
+.mobileControls {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  margin-top: 16px;
+
+  .leftControls {
+    display: flex;
+    gap: 8px;
+
+    button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 1px solid #DEE0E3;
+      border-radius: 8px;
+      padding: 0;
+      cursor: pointer;
+    }
+  }
+
+  .viewToggle {
+    display: flex;
+    gap: 0;
+
+    button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #dee0e3;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+        border-left: none;
+      }
+
+      &.active {
+        background: #924FE8;
+        border-color: #924FE8;
+        svg path {
+          fill: white;
+        }
+      }
+    }
+  }
+}
+
+.cardsContainer {
+  display: none;
+}
+
+.card {
+  border: 1px solid #dee0e3;
+  border-radius: 12px;
+  padding: 16px;
+  background: white;
+  margin-bottom: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .label {
+    color: #0F132499;
+    font-size: 14px;
+  }
+
+  .value {
+    color: #14151A;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mobileControls {
+    display: flex;
+  }
+
+  .container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+
+    &[data-view-mode='cards'] {
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+  }
+
+  .table[data-view-mode='cards'] {
+    display: none;
+  }
+  
+  .cardsContainer[data-view-mode='table'] {
+    display: none;
+  }
+  
+  .cardsContainer[data-view-mode='cards'] {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+} 
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #DEE0E3;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  padding-left: 16px;
+}
+
+.search {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  &::placeholder {
+    color: #0D112666;
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filterGroup {
+  padding: 16px;
+  border-bottom: 1px solid #DEE0E3;
+}
+
+.filterTypeButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #DEE0E3;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #924FE8;
+    color: #924FE8;
+  }
+}
+
+.filterLabel {
+  font-size: 14px;
+  color: #6E6E6E;
+}
+
+.filterCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: #924FE8;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+} 

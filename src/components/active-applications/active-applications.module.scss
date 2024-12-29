@@ -1,5 +1,5 @@
 .pageContainer {
-   padding: 24px;
+   // padding: 24px;
 }
 
 .header {
@@ -82,7 +82,7 @@
 
 @media (max-width: 768px) {
    .pageContainer {
-      padding: 16px;
+      padding: 0;
       overflow-x: hidden;
    }
 

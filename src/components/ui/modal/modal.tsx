@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Modal.module.scss";
+import { AlertIcon } from "../../svgs/svgs";
 
 interface ModalProps {
   children: React.ReactNode;
   isOpened: boolean;
   setOpen: (isOpen: boolean) => void;
-  styles?: React.CSSProperties,
-  deskription?: string,
-  title: string
+  styles?: React.CSSProperties;
+  deskription?: string;
+  title: string;
+  danger?: boolean;
+  maxWidth?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ children, isOpened, setOpen, title, deskription }) => {
+const Modal: React.FC<ModalProps> = ({ children, isOpened, setOpen, title, deskription, danger, maxWidth }) => {
   const [isRendered, setIsRendered] = useState(false); // Отвечает за наличие компонента в DOM
   const [isClosing, setIsClosing] = useState(false); // Запускает анимацию закрытия
 
@@ -45,11 +48,11 @@ const Modal: React.FC<ModalProps> = ({ children, isOpened, setOpen, title, deskr
       onClick={handleClose}
     >
       <div
-        style={styles}
-        className={`${styles.modal} ${isClosing ? styles.slideOut : styles.slideIn}`}
-        onClick={(e) => e.stopPropagation()} // Останавливаем всплытие клика
+        className={`${styles.modal} ${isClosing ? styles.slideOut : styles.slideIn} ${maxWidth ? styles.maxWidth : ''}`}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.content}>
+          {danger && <div style={{marginBottom: '10px'}}><AlertIcon /></div>}
           <h1 className={styles.heading}>{title}</h1>
           {deskription && <p className={styles.desk}>{deskription}</p>}
           {children}

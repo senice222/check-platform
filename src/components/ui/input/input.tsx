@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import style from './input.module.scss'
+import React, { useState, useEffect } from 'react'
+import s from './input.module.scss'
 
 interface InputProps {
    label?: string
@@ -11,11 +11,17 @@ interface InputProps {
    disabled?: boolean
    toggleType?: boolean
    noMargin?: boolean
+   style?: React.CSSProperties
 }
 
-const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, noMargin, disabled }: InputProps) => {
+const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, noMargin, disabled, style }: InputProps) => {
    const [inputValue, setInputValue] = useState(value)
    const [inputType, setInputType] = useState('text')
+
+   useEffect(() => {
+      setInputValue(value)
+   }, [value])
+
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
       onChange && onChange(e)
@@ -28,19 +34,20 @@ const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, n
    }
 
    return (
-      <div className={style.inputGroup} style={noMargin ? {marginBottom: 0, marginTop: '0px'} : {}}>
-         {label && <label className={style.label}>{label}</label>}
-         <div className={style.inputWrapper}>
+      <div className={s.inputGroup} style={noMargin ? {marginBottom: 0, marginTop: '0px'} : {}}>
+         {label && <label className={s.label}>{label}</label>}
+         <div className={s.inputWrapper}>
             <input
-            disabled={disabled}
+               disabled={disabled}
                type={inputType}
                placeholder={placeholder}
-               className={style.input}
-               value={disabled ? value : inputValue}
+               className={s.input}
+               value={inputValue || ''}
                onChange={handleChange}
+               style={style}
             />
             {icon && (
-               <div className={style.icon} onClick={handleToggleType}>
+               <div className={s.icon} onClick={handleToggleType}>
                   <img src={icon} alt="/" />
                </div>
             )}

@@ -1,0 +1,186 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  height: 85vh;
+  animation: slideIn 0.3s ease;
+  
+  &.closing {
+    animation: slideOut 0.3s ease;
+  }
+}
+
+.header {
+  background: #EEECFE;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 0;
+  position: relative;
+}
+
+.dragIndicator {
+  width: 40px;
+  height: 4px;
+  background-color: #DEE0E3;
+  border-radius: 2px;
+  margin: 0 auto 12px;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+
+  h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 17px;
+    font-weight: 600;
+    color: #14151A;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  button {
+    position: relative;
+    z-index: 1;
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #924FE8;
+    font-size: 17px;
+    font-weight: 400;
+    cursor: pointer;
+    padding: 0;
+  }
+}
+
+.content {
+  padding: 16px;
+}
+
+.filterBlock {
+  margin-bottom: 24px;
+}
+
+.filterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filterTitle {
+  font-size: 14px;
+  color: #0F132499;
+}
+
+.appliedFilter {
+  font-size: 14px;
+  color: #924FE8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resetButton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0F132499;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+  cursor: pointer;
+
+  &:hover {
+    .typeBadge {
+      opacity: 0.8;
+    }
+  }
+}
+
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.elite {
+    background-color: #FDEAD8;
+    color: #AE590A;
+  }
+
+  &.white {
+    background-color: #E3EAFD;
+    color: #133A9A;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+} 

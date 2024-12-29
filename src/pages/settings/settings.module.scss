@@ -1,0 +1,223 @@
+.settings {
+    width: 100%;
+    
+    .title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 25px;
+    }
+    .header {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 40px;
+
+        .headerLeft {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            .titleBlock {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .headerTitle {
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: #14151A;
+                }
+
+                @media screen and (max-width: 768px) {
+                    > div {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .filterButton {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #DEE0E3;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                border-color: #924FE8;
+                color: #924FE8;
+            }
+        }
+
+        .filterLabel {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+
+        .filterCount {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: #924FE8;
+            border-radius: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+    }
+    .tab {
+        padding: 8px 0;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        color: #6E6E6E;
+        position: relative;
+
+        &.active {
+            color: black;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: #6B4EFF;
+            }
+        }
+
+        &:hover:not(.active) {
+            color: black;
+        }
+    }
+}
+.mobile {
+    display: none;
+    // padding: 0 16px;
+    width: 100%;
+    .mobile_header {
+        display: flex;
+        height: 44px;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #DEE0E3;
+        h2 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000000;
+
+        }
+    }
+    .mobile_content {
+        padding: 0 16px;
+    }
+    .account {
+        margin-top: 25px;
+        box-shadow: 0px 0.5px 3px 0px #1A1A1A14;
+        display: flex;
+        height: 72px;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        padding: 16px;
+        border: 1px solid #DEE0E3;
+        border-radius: 10px;
+        .account_info {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #E9EAEC;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0A0F2940;
+        }
+        .left {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+            h2 {
+                color: #14151A;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 20px;
+            }
+            p {
+                font-weight: 400;
+                font-size: 12px;
+                color: #0F132499;
+            }
+        }
+        .logout {
+            cursor: pointer;
+        }
+    }
+    .link {
+        margin-top: 25px;
+        display: flex;
+        height: 58px;
+        cursor: pointer;
+        box-shadow: 0px 0.5px 3px 0px #1A1A1A14;
+        gap: 10px;
+        width: 100%;
+        align-items: center;
+        padding: 16px 20px;
+        border: 1px solid #DEE0E3;
+        border-radius: 10px;
+        h3 {
+            color: #14151A;
+            font-size: 16px;
+            font-weight: 500;
+        }
+    }
+    .hr {
+        margin: 25px 0px;
+        height: 1px;
+        width: 100%;
+        background-color: #E9EAEC;
+    }
+}
+.outlet {
+    width: 100%;
+}
+.responsive_outlet {
+    display: none;
+}
+@media screen and (max-width: 768px) {
+    .outlet {
+        display: none;
+    }
+    .responsive_outlet {
+        display: block;
+    }
+    .settings {
+        position: absolute;
+        left: 0;
+        top: 0;
+        .desktop {
+            display: none;
+        }
+        .mobile {
+            display: block;
+        }
+    }
+}

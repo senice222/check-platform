@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import styles from './checks.module.scss';
 import { FilterState } from '../../types/filter-state';
 import SelectGroup from '../../components/select-group/select-group';
@@ -7,6 +7,8 @@ import NewChecksTable from '../../components/tables/checks-table/new-checks-tabl
 import Button from '../../components/ui/button/button';
 import { DownloadSvg } from '../../components/svgs/svgs';
 import { ApplicationStatus } from '../../constants/statuses';
+import SearchBottomSheet from '../../components/modals/search-bottom-sheet/search-bottom-sheet';
+import { SearchIcon, TableIcon, CardIcon } from '../../components/svgs/svgs';
 
 interface CheckData {
   id: string;
@@ -90,6 +92,21 @@ const Checks = () => {
     from: null,
     to: null
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    setIsMobile(window.innerWidth <= 600);
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleDesktopFilterChange = useCallback((filters: Filters) => {
     setFilters(prev => ({
@@ -154,9 +171,23 @@ const Checks = () => {
     // Фильтрация по дате
     if (filters.date?.start || filters.date?.end) {
       result = result.filter(item => {
-        const itemDate = new Date(item.date.split('/').reverse().join('-'));
-        const filterStart = filters.date?.start ? new Date(filters.date.start.split('.').reverse().join('-')) : null;
-        const filterEnd = filters.date?.end ? new Date(filters.date.end.split('.').reverse().join('-')) : null;
+        const [day, month, year] = item.date.split('/');
+        const itemDate = new Date(parseInt(`20${year}`), parseInt(month) - 1, parseInt(day));
+
+        const [filterStartDay, filterStartMonth, filterStartYear] = (filters.date?.start || '').split('.');
+        const [filterEndDay, filterEndMonth, filterEndYear] = (filters.date?.end || '').split('.');
+
+        const filterStart = filters.date?.start ? new Date(
+          parseInt(`20${filterStartYear}`),
+          parseInt(filterStartMonth) - 1,
+          parseInt(filterStartDay)
+        ) : null;
+
+        const filterEnd = filters.date?.end ? new Date(
+          parseInt(`20${filterEndYear}`),
+          parseInt(filterEndMonth) - 1,
+          parseInt(filterEndDay)
+        ) : null;
 
         if (filterStart && filterEnd) {
           return itemDate >= filterStart && itemDate <= filterEnd;
@@ -197,6 +228,37 @@ const Checks = () => {
     return result;
   }, [filters, sumRange, initialData]);
 
+  const renderCard = (check: CheckData) => (
+    <div className={styles.card} key={check.id}>
+      <div className={styles.cardBody}>
+        <div className={styles.header}>
+          <div className={styles.idDate}>
+            <span className={styles.id}>{check.id}</span>
+            <span className={styles.date}>{check.date}</span>
+          </div>
+        </div>
+        <div className={styles.content}>
+          <div className={styles.companyBlock}>
+            <span className={styles.label}>Покупатель</span>
+            <span className={styles.companyName}>{check.company.name}</span>
+            <span className={styles.inn}>ИНН {check.company.inn}</span>
+          </div>
+          <div className={styles.sellerBlock}>
+            <span className={styles.label}>Продавец</span>
+            <span className={styles.sellerName}>{check.seller.name}</span>
+            <span className={styles.inn}>ИНН {check.seller.inn}</span>
+          </div>
+          <div className={styles.priceBlock}>
+            <div className={styles.priceRow}>
+              <span className={styles.label}>Сумма:</span>
+              <span className={styles.value}>{check.fullPrice}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.header}>
@@ -212,6 +274,7 @@ const Checks = () => {
       <div className={styles.mobileHeader}>
         <h1>Чеки</h1>
       </div>
+
       <SelectGroup 
         data={adaptedData}
         initialData={adaptedData}
@@ -222,7 +285,13 @@ const Checks = () => {
       />
       <NewChecksTable 
         data={filteredData}
-        onFilterOpen={() => setIsFilterOpen(true)} 
+        onFilterOpen={() => setIsFilterOpen(true)}
+        isSearchOpen={isSearchOpen}
+        setIsSearchOpen={setIsSearchOpen}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
       />
       <div className={styles.mobileFilterContainer}>
         <FilterBottomSheet
@@ -239,6 +308,26 @@ const Checks = () => {
           hideStatusFilter={true}
         />
       </div>
+
+      <SearchBottomSheet<CheckData>
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        data={filteredData}
+        renderCard={renderCard}
+        filterFunction={(item, query) => 
+          item.company.name.toLowerCase().includes(query) ||
+          item.seller.name.toLowerCase().includes(query) ||
+          item.id.toLowerCase().includes(query)
+        }
+        emptyStateText={{
+          title: 'Это поиск чеков',
+          description: 'Здесь можно искать чеки по номеру, компании или продавцу.',
+          searchTitle: 'Ничего не найдено',
+          searchDescription: '��еков с такими параметрами нет. Проверьте ваш запрос.'
+        }}
+      />
     </div>
   );
 };

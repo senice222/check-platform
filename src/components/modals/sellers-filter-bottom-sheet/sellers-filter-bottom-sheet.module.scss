@@ -1,0 +1,40 @@
+.content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.typeList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.typeItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.typeBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.elite {
+    background-color: #FDEAD8;
+    color: #AE590A;
+  }
+
+  &.white {
+    background-color: #E3EAFD;
+    color: #133A9A;
+  }
+}
+
+.actions {
+  margin-top: auto;
+} 

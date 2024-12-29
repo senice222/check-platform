@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styles from "./ckecks-table.module.scss";
-import { Calendar, TableIcon, CardIcon } from '../../svgs/svgs';
+import { Calendar, TableIcon, CardIcon, EditSvg as EditIcon, Trash as Cross } from '../../svgs/svgs';
 
 interface CheckRow {
   id: string;
@@ -13,7 +13,54 @@ interface CheckRow {
   vat20: string;
 }
 
-const ChecksTable = () => {
+interface ChecksTableProps {
+  hasChecks?: boolean;
+  showTotal?: boolean;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  data?: CheckRow[];
+}
+
+const mockData: CheckRow[] = [
+  { 
+    id: "#1", 
+    date: "25/10/24", 
+    product: "Товар 1", 
+    unit: "шт.", 
+    quantity: 1000, 
+    priceWithVAT: "91,316.00", 
+    totalWithVAT: "91,316.00", 
+    vat20: "15,219.33" 
+  },
+  { 
+    id: "#2", 
+    date: "25/10/24", 
+    product: "Товар 2", 
+    unit: "шт.", 
+    quantity: 500, 
+    priceWithVAT: "45,658.00", 
+    totalWithVAT: "22,829.00", 
+    vat20: "3,804.83" 
+  },
+  { 
+    id: "#3", 
+    date: "25/10/24", 
+    product: "Товар 3", 
+    unit: "шт.", 
+    quantity: 750, 
+    priceWithVAT: "68,487.00", 
+    totalWithVAT: "51,365.25", 
+    vat20: "8,560.88" 
+  }
+];
+
+const ChecksTable: React.FC<ChecksTableProps> = ({ 
+  hasChecks = true, 
+  showTotal = false,
+  onDelete,
+  onEdit,
+  data = mockData
+}) => {
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [isMobile, setIsMobile] = useState(false);
 
@@ -26,16 +73,6 @@ const ChecksTable = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const data: CheckRow[] = [
-    { id: "#1", date: "25/10/24", product: "Brandon Clark", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-    { id: "#2", date: "25/10/24", product: "Ryan Mitchell", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-    { id: "#3", date: "25/10/24", product: "Mia Rodriguez", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-    { id: "#4", date: "25/10/24", product: "Katherine Turner", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-    { id: "#5", date: "25/10/24", product: "Sarah Reynolds", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-    { id: "#6", date: "25/10/24", product: "David Larson", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-    { id: "#7", date: "25/10/24", product: "Emma Thompson", unit: "шт.", quantity: 1000, priceWithVAT: "91,316.00", totalWithVAT: "91,316.00", vat20: "91,316.00" },
-  ];
 
   const renderCard = (row: CheckRow) => (
     <div className={styles.card} key={row.id}>
@@ -98,6 +135,43 @@ const ChecksTable = () => {
     </div>
   );
 
+  const renderTableRow = (row: CheckRow) => (
+    <tr key={row.id}>
+      <td>{row.id}</td>
+      <td>
+        <div className={styles.dateContainer}>
+          <Calendar />
+          <span>{row.date}</span>
+        </div>
+      </td>
+      <td>{row.product}</td>
+      <td>{row.unit}</td>
+      <td>{row.quantity}</td>
+      <td>{row.priceWithVAT}</td>
+      <td className={styles.vat}>{row.totalWithVAT}</td>
+      <td className={styles.vat}>{row.vat20}</td>
+      {(onDelete || onEdit) && (
+        <td className={styles.actions}>
+          {onEdit && (
+            <button onClick={() => onEdit(row.id)} className={styles.editButton}>
+              <EditIcon />
+            </button>
+          )}
+          {onDelete && (
+            <button onClick={() => onDelete(row.id)} className={styles.deleteButton}>
+              <Cross />
+            </button>
+          )}
+        </td>
+      )}
+    </tr>
+  );
+
+  const totals = data.reduce((acc, row) => ({
+    totalWithVAT: acc.totalWithVAT + parseFloat(row.totalWithVAT.replace(',', '')),
+    vat20: acc.vat20 + parseFloat(row.vat20.replace(',', ''))
+  }), { totalWithVAT: 0, vat20: 0 });
+
   return (
     <>
       {isMobile && (
@@ -130,26 +204,19 @@ const ChecksTable = () => {
               <th>Цена за ед. с НДС</th>
               <th>Стоимость с НДС</th>
               <th>НДС 20%</th>
+              {(onDelete || onEdit) && <th>Действия</th>}
             </tr>
           </thead>
           <tbody>
-            {data.map((row) => (
-              <tr key={row.id}>
-                <td>{row.id}</td>
-                <td>
-                  <div className={styles.dateContainer}>
-                    <Calendar />
-                    <span>{row.date}</span>
-                  </div>
-                </td>
-                <td>{row.product}</td>
-                <td>{row.unit}</td>
-                <td>{row.quantity}</td>
-                <td>{row.priceWithVAT}</td>
-                <td className={styles.vat}>{row.totalWithVAT}</td>
-                <td className={styles.vat}>{row.vat20}</td>
+            {data.map(renderTableRow)}
+            {showTotal && (
+              <tr className={styles.totalRow}>
+                <td colSpan={6}>Итого:</td>
+                <td className={styles.vat}>{totals.totalWithVAT.toFixed(2)}</td>
+                <td className={styles.vat}>{totals.vat20.toFixed(2)}</td>
+                {(onDelete || onEdit) && <td></td>}
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 

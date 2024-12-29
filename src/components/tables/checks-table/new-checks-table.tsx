@@ -25,10 +25,24 @@ interface CheckData {
 interface NewChecksTableProps {
   data: CheckData[];
   onFilterOpen: () => void;
+  isSearchOpen: boolean;
+  setIsSearchOpen: (value: boolean) => void;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  viewMode: 'table' | 'cards';
+  setViewMode: (mode: 'table' | 'cards') => void;
 }
 
-const NewChecksTable: React.FC<NewChecksTableProps> = ({ data, onFilterOpen }) => {
-  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+const NewChecksTable: React.FC<NewChecksTableProps> = ({ 
+  data, 
+  onFilterOpen,
+  isSearchOpen,
+  setIsSearchOpen,
+  searchQuery,
+  onSearchChange,
+  viewMode,
+  setViewMode
+}) => {
   const [isMobile, setIsMobile] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
@@ -112,7 +126,7 @@ const NewChecksTable: React.FC<NewChecksTableProps> = ({ data, onFilterOpen }) =
             <button onClick={onFilterOpen}>
               <FilterButton />
             </button>
-            <button onClick={() => setShowSearch(!showSearch)}>
+            <button onClick={() => setIsSearchOpen(true)}>
               <SearchIcon />
             </button>
           </div>

@@ -40,6 +40,10 @@
     &.slideOut {
       animation: slideOut 0.3s forwards;
     }
+  
+    &.maxWidth {
+      max-width: 440px;
+    }
   }
   
   .closeButton {

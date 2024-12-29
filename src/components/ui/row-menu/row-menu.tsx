@@ -6,10 +6,13 @@ interface RowMenuProps {
     id: string;
     label: string;
     onClick: () => void;
+    danger?: boolean;
+    color?: string;
   }>;
+  variant?: 'card' | 'default';
 }
 
-const RowMenu: React.FC<RowMenuProps> = ({ options }) => {
+const RowMenu: React.FC<RowMenuProps> = ({ options, variant }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -30,8 +33,8 @@ const RowMenu: React.FC<RowMenuProps> = ({ options }) => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setMenuPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX - 160 + rect.width,
+        top: rect.top + rect.height,
+        left: rect.left - 180 + rect.width,
       });
     }
     setIsOpen(!isOpen);
@@ -53,7 +56,7 @@ const RowMenu: React.FC<RowMenuProps> = ({ options }) => {
       
       {isOpen && (
         <div 
-          className={styles.menuDropdown}
+          className={`${styles.menuDropdown} ${variant === 'card' ? styles.cardVariant : ''}`}
           style={{
             top: `${menuPosition.top}px`,
             left: `${menuPosition.left}px`
@@ -62,11 +65,12 @@ const RowMenu: React.FC<RowMenuProps> = ({ options }) => {
           {options.map((option) => (
             <button
               key={option.id}
-              className={styles.menuItem}
+              className={`${styles.menuItem} ${option.danger ? styles.danger : ''}`}
               onClick={() => {
                 option.onClick();
                 setIsOpen(false);
               }}
+              style={{ color: option.color }}
             >
               {option.label}
             </button>

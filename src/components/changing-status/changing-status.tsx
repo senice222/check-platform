@@ -3,6 +3,7 @@ import { type ApplicationStatus } from "../../constants/statuses";
 import StatusBadge from "../ui/status-badge/status-badge";
 import CheckBox from "../ui/check-box/check-box";
 import s from "./changing-status.module.scss";
+
 import ChooseStatus from "../modals/choose-status/chose-status";
 
 interface ChangingStatusProps {
@@ -19,10 +20,10 @@ const ChangingStatus: FC<ChangingStatusProps> = ({
   setOpened,
 }) => {
   const allStatuses = [
-    ApplicationStatus.NEW,
-    ApplicationStatus.IN_PROGRESS,
-    ApplicationStatus.COMPLETED,
-    ApplicationStatus.CANCELLED
+    'created',
+    'issued',
+    'client_paid',
+    'us_paid'
   ];
   const [opened, setOpen] = useState(false);
   const isMobile = window.innerWidth < 1000;

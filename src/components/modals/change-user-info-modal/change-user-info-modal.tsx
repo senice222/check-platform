@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import s from './change-user-info-modal.module.scss';
 import Modal from '../../ui/modal/modal';
 import Button from '../../ui/button/button';
@@ -20,7 +20,10 @@ const ChangeUserInfoModal: FC<Props> = ({ isOpened, setOpen, handleUpdate, defau
   const showSuccess = () => {
     addNotification(`Профиль клиента ${defaultValue} успешно отредактирован.`, "success");
   };
-
+  useEffect(() => {
+    setName(defaultValue);
+  }, [defaultValue]);
+  
   return (
     <Modal title='Редактирование клиента' setOpen={setOpen} isOpened={isOpened}>
       {/* Содержимое модального окна */}

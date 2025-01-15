@@ -260,4 +260,28 @@
   to {
     opacity: 0;
   }
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  .header {
+    flex-shrink: 0;
+    padding: 16px;
+    border-bottom: 1px solid #DEE0E3;
+  }
+
+  .searchWrapper {
+    flex-shrink: 0;
+    padding: 0 16px 16px;
+  }
+
+  .results {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+    -webkit-overflow-scrolling: touch;
+  }
 } 

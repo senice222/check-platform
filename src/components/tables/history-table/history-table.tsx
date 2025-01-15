@@ -1,128 +1,96 @@
 import { useState, useEffect } from "react";
 import styles from "./history-table.module.scss";
 import StatusBadge from "../../ui/status-badge/status-badge";
-import { ApplicationStatus } from "../../../constants/statuses";
-import { TableIcon, CardIcon } from "../../svgs/svgs";
+import { formatDate } from "../../../utils/date";
+import Loader from "../../ui/loader/loader";
 
-interface HistoryRow {
-  date: string;
-  action: string;
+interface HistoryRecord {
+  id: string;
+  type: 'status' | 'change';
+  message: string;
   status?: string;
-  statusType?: ApplicationStatus;
-  isUser?: boolean;
+  action?: 'add' | 'remove';
+  userId?: string;
+  userName?: string;
+  createdAt: string;
 }
 
-const HistoryTable = () => {
-  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
-  const [isMobile, setIsMobile] = useState(false);
+interface Props {
+  history: HistoryRecord[];
+  isLoading: boolean;
+}
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 600);
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const data: HistoryRow[] = [
-    { 
-      date: "01/11/24 в 21:33 мск", 
-      action: "Заявка создана пользователем ", 
-      status: "Георгий",
-      isUser: true 
-    },
-    { 
-      date: "01/11/24 в 21:33 мск", 
-      action: "Заявка изменена администратором ", 
-      status: "Виктория",
-      isUser: true 
-    },
-    { 
-      date: "01/11/24 в 21:33 мск", 
-      action: "Добавлен статус ", 
-      status: "Выдана СФ",
-      statusType: "issued" 
-    },
-    { 
-      date: "01/11/24 в 21:33 мск", 
-      action: "Удалён статус ", 
-      status: "Создана",
-      statusType: "created" 
-    },
-  ];
-
-  const renderCard = (row: HistoryRow, index: number) => (
-    <div className={styles.card} key={index}>
-      <div className={styles.cardHeader}>
-        <span className={styles.cardDate}>{row.date}</span>
-      </div>
-      <div className={styles.cardBody}>
-        <div className={styles.cardAction}>
-          {row.action}
-          {row.isUser ? (
-            <span className={styles.userLink}>{row.status}</span>
-          ) : row.statusType ? (
-            <span className={styles.statusContainer}>
-              <StatusBadge status={row.statusType} bordered />
-            </span>
-          ) : null}
+const HistoryTable: React.FC<Props> = ({ history, isLoading }) => {
+  const renderMessage = (record: HistoryRecord) => {
+    if (record.type === 'change') {
+      return (
+        <div className={styles.messageContainer}>
+          <span>Заявка изменена пользователем</span>
+          {record.userName && (
+            <span className={styles.userLink}>{record.userName}</span>
+          )}
         </div>
+      );
+    }
+
+    if (record.type === 'status') {
+      return (
+        <div className={styles.messageContainer}>
+          <span>{record.message}</span>
+          {record.status && (
+            <StatusBadge status={record.status as any} />
+          )}
+        </div>
+      );
+    }
+
+    return record.message;
+  };
+
+  const renderCard = (record: HistoryRecord, index: number) => (
+    <div key={record.id || index} className={styles.card}>
+      <div className={styles.cardHeader}>
+        <span className={styles.date}>{formatDate(new Date(record.createdAt))}</span>
+      </div>
+      <div className={styles.cardContent}>
+        {renderMessage(record)}
       </div>
     </div>
   );
 
+  if (isLoading) {
+    return (
+      <div className={styles.loaderContainer}>
+        <Loader />
+      </div>
+    );
+  }
+
   return (
-    <>
-      {isMobile && (
-        <div className={styles.viewToggle}>
-          <button
-            className={`${styles.toggleButton} ${viewMode === 'table' ? styles.active : ''}`}
-            onClick={() => setViewMode('table')}
-          >
-            <TableIcon />
-          </button>
-          <button
-            className={`${styles.toggleButton} ${viewMode === 'cards' ? styles.active : ''}`}
-            onClick={() => setViewMode('cards')}
-          >
-            <CardIcon />
-          </button>
-        </div>
-      )}
-      <div className={styles.container} data-view-mode={viewMode}>
-        <table className={styles.table} data-view-mode={viewMode}>
+    <div className={styles.container}>
+      <div className={styles.desktop}>
+        <table className={styles.table}>
           <thead>
             <tr>
-              <th>Дата и время</th>
+              <th>Дата</th>
               <th>Действие</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((row, index) => (
-              <tr key={index}>
-                <td>{row.date}</td>
-                <td>
-                  {row.action}
-                  {row.isUser ? (
-                    <span className={styles.userLink}>{row.status}</span>
-                  ) : row.statusType ? (
-                    <span className={styles.statusContainer}>
-                      <StatusBadge status={row.statusType} bordered />
-                    </span>
-                  ) : null}
-                </td>
+            {history.map((record, index) => (
+              <tr key={record.id || index}>
+                <td>{formatDate(new Date(record.createdAt))}</td>
+                <td>{renderMessage(record)}</td>
               </tr>
             ))}
           </tbody>
         </table>
-
-        <div className={styles.cardsContainer} data-view-mode={viewMode}>
-          {data.map((row, index) => renderCard(row, index))}
-        </div>
       </div>
-    </>
+
+      <div className={styles.mobile}>
+        {history.map((record, index) => renderCard(record, index))}
+      </div>
+    </div>
   );
 };
 

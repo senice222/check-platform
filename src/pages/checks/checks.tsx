@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styles from './checks.module.scss';
 import { FilterState } from '../../types/filter-state';
 import SelectGroup from '../../components/select-group/select-group';
@@ -6,18 +6,23 @@ import FilterBottomSheet from '../../components/modals/filter-bottom-sheet/filte
 import NewChecksTable from '../../components/tables/checks-table/new-checks-table';
 import Button from '../../components/ui/button/button';
 import { DownloadSvg } from '../../components/svgs/svgs';
-import { ApplicationStatus } from '../../constants/statuses';
 import SearchBottomSheet from '../../components/modals/search-bottom-sheet/search-bottom-sheet';
-import { SearchIcon, TableIcon, CardIcon } from '../../components/svgs/svgs';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { fetchChecks } from '../../store/slices/checkSlice';
+import Pagination from '../../components/ui/pagination/pagination';
+import ExportChecksModal from '../../components/modals/export-checks-modal/export-checks-modal';
 
 interface CheckData {
   id: string;
   date: string;
   company: {
+    id: string;
     name: string;
     inn: string;
   };
   seller: {
+    id: string;
     name: string;
     inn: string;
     isElite?: boolean;
@@ -30,99 +35,83 @@ interface CheckData {
   vat: string;
 }
 
-const initialData: CheckData[] = [
-  {
-    id: "#01",
-    date: "25/10/24",
-    company: {
-      name: "ЗАО 'ТЕХНОЛОГИЯ'",
-      inn: "987654321"
-    },
-    seller: {
-      name: "ООО 'Инновации 2023'",
-      inn: "123456789",
-      isElite: true
-    },
-    product: "Игровая мышь",
-    unit: "шт.",
-    quantity: "1.000",
-    priceForOne: "91,316.00",
-    fullPrice: "91,316.00",
-    vat: "91,316.00"
-  },
-  // Добавим еще данных из скриншота
-  {
-    id: "#02",
-    date: "25/10/24",
-    company: {
-      name: "ЗАО 'ИННОВАЦИИ'",
-      inn: "123456789"
-    },
-    seller: {
-      name: "ООО 'Технологии Будущего'",
-      inn: "987654321"
-    },
-    product: "Экшн-камера",
-    unit: "шт.",
-    quantity: "1.000",
-    priceForOne: "91,316.00",
-    fullPrice: "91,316.00",
-    vat: "91,316.00"
-  },
-  // ... добавим остальные данные из скриншота
-];
-
-interface Filters {
-  companies: string[];
-  sellers: string[];
-  sum?: { from: string; to: string };
-  date?: { start: string; end: string };
-}
-
 const Checks = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { checks, pagination, isLoading } = useSelector((state: RootState) => state.check);
+  console.log(checks);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     date: { start: '', end: '' },
-    users: [], // Оставляем для совместимости с типом
-    status: '', // Оставляем для совместимости с типом
+    users: [],
     companies: [],
-    sellers: []
-  });
-  const [sumRange, setSumRange] = useState<{ from: number | null; to: number | null }>({
-    from: null,
-    to: null
+    sellers: [],
+    status: '',
+    statuses: [],
+    sum: { from: '', to: '' },
+    search: ''
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [isMobile, setIsMobile] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 600);
     };
-
-    setIsMobile(window.innerWidth <= 600);
-
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleDesktopFilterChange = useCallback((filters: Filters) => {
-    setFilters(prev => ({
-      ...prev,
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).replace(/\./g, '/');
+  };
+
+  const formatPrice = (price: number) => {
+    return price.toLocaleString('ru-RU', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
+
+  const loadChecks = useCallback(() => {
+    const apiFilters = {
       companies: filters.companies,
       sellers: filters.sellers,
-    }));
+      dateStart: filters.date.start,
+      dateEnd: filters.date.end,
+      sumFrom: filters.sum?.from,
+      sumTo: filters.sum?.to,
+      search: searchQuery
+    };
 
-    if (filters.sum) {
-      setSumRange({
-        from: filters.sum.from ? parseFloat(filters.sum.from) : null,
-        to: filters.sum.to ? parseFloat(filters.sum.to) : null
-      });
-    } else {
-      setSumRange({ from: null, to: null });
-    }
+    dispatch(fetchChecks({
+      filters: apiFilters,
+      pagination: {
+        page: pagination.page,
+        limit: pagination.limit
+      }
+    }));
+  }, [dispatch, filters, searchQuery, pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    loadChecks();
+  }, [loadChecks]);
+
+  const handleDesktopFilterChange = useCallback((newFilters: any) => {
+    setFilters(prev => ({
+      ...prev,
+      companies: newFilters.companies,
+      sellers: newFilters.sellers,
+      sum: newFilters.sum
+    }));
   }, []);
 
   const handleDateChange = useCallback((start: string, end: string) => {
@@ -132,126 +121,64 @@ const Checks = () => {
     }));
   }, []);
 
-  const handleSumChange = useCallback((from: number | null, to: number | null) => {
-    setSumRange({ from, to });
-  }, []);
-
   const handleMobileFilterChange = useCallback((newFilters: FilterState) => {
     setFilters(newFilters);
   }, []);
 
-  const handleExport = () => {
-    // Логика экспорта в XLS
-    console.log('Exporting to XLS...');
-  };
-
-  const adaptedData = useMemo(() => {
-    return initialData.map(item => ({
-      id: item.id,
-      status: 'created' as ApplicationStatus,
-      company: item.company.name,
-      seller: item.seller.name,
-      checksCount: 0,
-      client: {
-        id: '',
-        name: '',
-        inn: ''
+  const handlePageChange = (page: number) => {
+    dispatch(fetchChecks({
+      filters: {
+        companies: filters.companies || [],
+        sellers: filters.sellers || [],
+        dateStart: filters.date?.start || '',
+        dateEnd: filters.date?.end || '',
+        sumFrom: filters.sum?.from || '',
+        sumTo: filters.sum?.to || '',
+        search: searchQuery
       },
-      sum: item.fullPrice,
-      date: {
-        start: item.date,
-        end: item.date
+      pagination: {
+        page,
+        limit: 10
       }
     }));
-  }, [initialData]);
+  };
 
-  const filteredData = useMemo(() => {
-    let result = [...initialData];
-    
-    // Фильтрация по дате
-    if (filters.date?.start || filters.date?.end) {
-      result = result.filter(item => {
-        const [day, month, year] = item.date.split('/');
-        const itemDate = new Date(parseInt(`20${year}`), parseInt(month) - 1, parseInt(day));
+  const handleExport = () => {
+    setIsExportModalOpen(true);
+  };
 
-        const [filterStartDay, filterStartMonth, filterStartYear] = (filters.date?.start || '').split('.');
-        const [filterEndDay, filterEndMonth, filterEndYear] = (filters.date?.end || '').split('.');
-
-        const filterStart = filters.date?.start ? new Date(
-          parseInt(`20${filterStartYear}`),
-          parseInt(filterStartMonth) - 1,
-          parseInt(filterStartDay)
-        ) : null;
-
-        const filterEnd = filters.date?.end ? new Date(
-          parseInt(`20${filterEndYear}`),
-          parseInt(filterEndMonth) - 1,
-          parseInt(filterEndDay)
-        ) : null;
-
-        if (filterStart && filterEnd) {
-          return itemDate >= filterStart && itemDate <= filterEnd;
-        } else if (filterStart) {
-          return itemDate >= filterStart;
-        } else if (filterEnd) {
-          return itemDate <= filterEnd;
-        }
-        return true;
-      });
-    }
-
-    // Фильтрация по компаниям
-    if (filters.companies && filters.companies.length > 0) {
-      result = result.filter(item => filters.companies?.includes(item.company.name));
-    }
-
-    // Фильтрация по продавцам
-    if (filters.sellers && filters.sellers.length > 0) {
-      result = result.filter(item => filters.sellers?.includes(item.seller.name));
-    }
-
-    // Фильтрация по сумме
-    if (sumRange.from !== null || sumRange.to !== null) {
-      result = result.filter(item => {
-        const itemSum = parseFloat(item.fullPrice.replace(/[^\d.]/g, ''));
-        if (sumRange.from !== null && sumRange.to !== null) {
-          return itemSum >= sumRange.from && itemSum <= sumRange.to;
-        } else if (sumRange.from !== null) {
-          return itemSum >= sumRange.from;
-        } else if (sumRange.to !== null) {
-          return itemSum <= sumRange.to;
-        }
-        return true;
-      });
-    }
-
-    return result;
-  }, [filters, sumRange, initialData]);
-
-  const renderCard = (check: CheckData) => (
+  const renderCard = (check: CheckData, index: number) => (
     <div className={styles.card} key={check.id}>
       <div className={styles.cardBody}>
         <div className={styles.header}>
           <div className={styles.idDate}>
-            <span className={styles.id}>{check.id}</span>
-            <span className={styles.date}>{check.date}</span>
+            <span className={styles.id}>№{index + 1}</span>
+            <span className={styles.date}>{formatDate(check.date)}</span>
           </div>
         </div>
         <div className={styles.content}>
           <div className={styles.companyBlock}>
             <span className={styles.label}>Покупатель</span>
-            <span className={styles.companyName}>{check.company.name}</span>
-            <span className={styles.inn}>ИНН {check.company.inn}</span>
+            <span className={styles.companyName}>
+              {check.application?.company?.name || 'Н/Д'}
+            </span>
+            <span className={styles.inn}>
+              ИНН {check.application?.company?.inn || 'Н/Д'}
+            </span>
           </div>
           <div className={styles.sellerBlock}>
             <span className={styles.label}>Продавец</span>
-            <span className={styles.sellerName}>{check.seller.name}</span>
-            <span className={styles.inn}>ИНН {check.seller.inn}</span>
+            <span className={styles.sellerName}>
+              {check.application?.seller?.name || 'Н/Д'}
+            </span>
+            <span className={styles.inn}>
+              ИНН {check.application?.seller?.inn || 'Н/Д'}
+            </span>
           </div>
           <div className={styles.priceBlock}>
             <div className={styles.priceRow}>
               <span className={styles.label}>Сумма:</span>
-              <span className={styles.value}>{check.fullPrice}</span>
+              <span className={styles.value}>{formatPrice(check.totalPrice)}</span>
             </div>
           </div>
         </div>
@@ -269,22 +196,22 @@ const Checks = () => {
           styleLabel={{ fontSize: "14px" }}
           label="Экспортировать в XLS"
           style={{ width: "200px", height: "32px" }}
+          onClick={handleExport}
         />
-      </div>
-      <div className={styles.mobileHeader}>
-        <h1>Чеки</h1>
       </div>
 
       <SelectGroup 
-        data={adaptedData}
-        initialData={adaptedData}
         onDateChange={handleDateChange}
         onFilterChange={handleDesktopFilterChange}
+        filters={filters}
+        onFiltersChange={handleMobileFilterChange}
         hideClientFilter={true}
         hideStatusFilter={true}
+        // className={isMobile ? 'mobileView' : ''}
       />
+
       <NewChecksTable 
-        data={filteredData}
+        data={checks}
         onFilterOpen={() => setIsFilterOpen(true)}
         isSearchOpen={isSearchOpen}
         setIsSearchOpen={setIsSearchOpen}
@@ -292,41 +219,57 @@ const Checks = () => {
         onSearchChange={setSearchQuery}
         viewMode={viewMode}
         setViewMode={setViewMode}
+        isLoading={isLoading}
+        onExport={handleExport}
       />
-      <div className={styles.mobileFilterContainer}>
-        <FilterBottomSheet
-          isOpen={isFilterOpen}
-          onClose={() => setIsFilterOpen(false)}
-          filters={filters}
-          onFiltersChange={handleMobileFilterChange}
-          onDateChange={handleDateChange}
-          onSumChange={handleSumChange}
-          data={adaptedData}
-          initialData={adaptedData}
-          sumRange={sumRange}
-          hideClientFilter={true}
-          hideStatusFilter={true}
+
+      {!isLoading && pagination && (
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.pages}
+          onPageChange={handlePageChange}
         />
-      </div>
+      )}
+
+      <FilterBottomSheet
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onFiltersChange={handleMobileFilterChange}
+        onDateChange={handleDateChange}
+        onSumChange={() => {}}
+        hideClientFilter={true}
+        hideStatusFilter={true}
+      />
 
       <SearchBottomSheet<CheckData>
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        data={filteredData}
-        renderCard={renderCard}
-        filterFunction={(item, query) => 
-          item.company.name.toLowerCase().includes(query) ||
-          item.seller.name.toLowerCase().includes(query) ||
-          item.id.toLowerCase().includes(query)
-        }
+        data={checks}
+        renderCard={(item, index) => renderCard(item, index)}
+        filterFunction={(item, query) => {
+          const searchQuery = query.toLowerCase();
+          return (
+            (item.application?.company?.name?.toLowerCase().includes(searchQuery) || false) ||
+            (item.application?.seller?.name?.toLowerCase().includes(searchQuery) || false) ||
+            (item.id?.toLowerCase().includes(searchQuery) || false)
+          );
+        }}
         emptyStateText={{
           title: 'Это поиск чеков',
           description: 'Здесь можно искать чеки по номеру, компании или продавцу.',
           searchTitle: 'Ничего не найдено',
-          searchDescription: '��еков с такими параметрами нет. Проверьте ваш запрос.'
+          searchDescription: 'Чеков с такими параметрами нет. Проверьте ваш запрос.'
         }}
+      />
+
+      <ExportChecksModal 
+        isOpened={isExportModalOpen}
+        setOpen={setIsExportModalOpen}
+        data={checks}
+        initialData={checks}
       />
     </div>
   );

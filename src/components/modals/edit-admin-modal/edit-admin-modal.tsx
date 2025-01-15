@@ -5,33 +5,85 @@ import Button from '../../ui/button/button';
 import { useNotification } from '../../../contexts/NotificationContext/NotificationContext';
 import Input from '../../ui/input/input';
 import { DetailedAvatar } from '../../svgs/svgs';
+import { useAppSelector } from '../../../hooks/redux';
 
 interface Props {
   isOpened: boolean;
   setOpen: (isOpen: boolean) => void;
   defaultValue: {
+    id?: string;
     name: string;
     login: string;
     password: string;
   };
   isCreating?: boolean;
+  onSubmit: (data: { name: string; login: string; password: string }) => Promise<void>;
 }
 
-const EditAdminModal: FC<Props> = ({ isOpened, setOpen, defaultValue, isCreating = false }) => {
+const EditAdminModal: FC<Props> = ({ isOpened, setOpen, defaultValue, isCreating = false, onSubmit }) => {
   const { addNotification } = useNotification();
   const [name, setName] = useState(defaultValue.name);
   const [login, setLogin] = useState(defaultValue.login);
   const [password, setPassword] = useState(defaultValue.password);
   const [isSecondStep, setIsSecondStep] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
-  const platformLink = "https://platform-name.com"; // Замените на реальную ссылку
+  const admins = useAppSelector(state => state.admin.admins);
+
+  const platformLink = "https://platform-name.com";
 
   useEffect(() => {
-    setName(defaultValue.name);
-    setLogin(defaultValue.login);
-    setPassword(defaultValue.password);
-    setIsSecondStep(false);
+    if (isOpened) {
+      setName(defaultValue.name);
+      setLogin(defaultValue.login);
+      setPassword(defaultValue.password || '');
+      setIsSecondStep(false);
+      setLoginError('');
+    }
   }, [defaultValue, isOpened]);
+
+  const validateLogin = (newLogin: string) => {
+    const existingAdmin = admins.find(admin => 
+      admin.login === newLogin && admin.id !== defaultValue.id
+    );
+    
+    if (existingAdmin) {
+      setLoginError('Администратор с таким логином уже существует');
+      return false;
+    }
+    
+    setLoginError('');
+    return true;
+  };
+
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLogin = e.target.value;
+    setLogin(newLogin);
+    validateLogin(newLogin);
+  };
+
+  const handleSubmit = async () => {
+    if (!name.trim()) {
+      addNotification('Введите ФИО', 'error');
+      return;
+    }
+
+    if (!login.trim()) {
+      addNotification('Введите логин', 'error');
+      return;
+    }
+
+    if (!password.trim()) {
+      addNotification('Введите пароль', 'error');
+      return;
+    }
+
+    try {
+      await onSubmit({ name, login, password });
+    } catch (error: any) {
+      addNotification(error.message || 'Произошла ошибка', 'error');
+    }
+  };
 
   const generatePassword = () => {
     const length = 15;
@@ -84,53 +136,40 @@ const EditAdminModal: FC<Props> = ({ isOpened, setOpen, defaultValue, isCreating
             <DetailedAvatar />
             <span className={s.userName}>{name}</span>
           </div>
-          
           <div className={s.inputWrapper}>
             <Input 
-              label="Ссылка для входа на платформу"
-              value={platformLink}
-              disabled
-              style={{ paddingRight: '100px' }}
+              noMargin={true}
+              label='Ссылка на платформу' 
+              value={platformLink} 
+              readOnly
             />
-            <button 
-              className={s.copyBtn} 
-              onClick={() => copyToClipboard(platformLink)}
-            >
+            <button className={s.copyBtn} onClick={() => copyToClipboard(platformLink)}>
               Скопировать
             </button>
           </div>
-
           <div className={s.inputWrapper}>
             <Input 
-              label="Логин"
-              value={login}
-              disabled
-              style={{ paddingRight: '100px' }}
+              noMargin={true}
+              label='Логин' 
+              value={login} 
+              readOnly
             />
-            <button 
-              className={s.copyBtn} 
-              onClick={() => copyToClipboard(login)}
-            >
+            <button className={s.copyBtn} onClick={() => copyToClipboard(login)}>
               Скопировать
             </button>
           </div>
-
           <div className={s.inputWrapper}>
             <Input 
-              label="Пароль"
-              value={password}
-              disabled
-              style={{ paddingRight: '100px' }}
+              noMargin={true}
+              label='Пароль' 
+              value={password} 
+              readOnly
             />
-            <button 
-              className={s.copyBtn} 
-              onClick={() => copyToClipboard(password)}
-            >
+            <button className={s.copyBtn} onClick={() => copyToClipboard(password)}>
               Скопировать
             </button>
           </div>
         </div>
-
         <div className={s.actions}>
           <Button 
             style={{ width: '172px', height: '40px' }} 
@@ -172,7 +211,8 @@ const EditAdminModal: FC<Props> = ({ isOpened, setOpen, defaultValue, isCreating
             noMargin={true}
             label='Логин' 
             value={login} 
-            onChange={(e) => setLogin(e.target.value)} 
+            onChange={handleLoginChange}
+            error={loginError} 
           />
         </div>
         <div className={s.passwordInput}>
@@ -201,9 +241,8 @@ const EditAdminModal: FC<Props> = ({ isOpened, setOpen, defaultValue, isCreating
           styleLabel={{ fontSize: '14px', fontWeight: '500', color: 'white' }} 
           variant='purple' 
           label={isCreating ? 'Создать' : 'Сохранить'}
-          onClick={() => {
-            showSuccess();
-          }} 
+          onClick={handleSubmit}
+          disabled={!!loginError}
         />
       </div>
     </Modal>

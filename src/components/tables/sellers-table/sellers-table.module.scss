@@ -37,6 +37,23 @@
       padding: 0 8px;
     }
   }
+
+  tbody {
+    tr {
+      td {
+        vertical-align: middle;
+        padding: 16px 0;
+        
+        &:first-child {
+          padding-left: 16px;
+        }
+        
+        &:last-child {
+          padding-right: 16px;
+        }
+      }
+    }
+  }
 }
 
 .companyDiv {
@@ -278,4 +295,16 @@
   color: white;
   font-size: 12px;
   font-weight: 500;
+} 
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  width: 100%;
+  
+  td & {
+    height: 200px;
+  }
 } 

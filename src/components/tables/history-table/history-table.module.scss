@@ -6,13 +6,31 @@
   overflow-x: auto;
 }
 
+.desktop {
+  display: block;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.mobile {
+  display: none;
+  padding: 16px;
+  gap: 16px;
+
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .table {
   width: 100%;
   min-width: 600px;
   border-collapse: collapse;
 
-  th,
-  td {
+  th, td {
     padding: 16px;
     text-align: left;
     border-bottom: 1px solid #f7f7f8;
@@ -21,139 +39,56 @@
   th {
     font-weight: 400;
     color: #0F132499;
-    background-color: #f8f8f8;
-
-    &:first-child {
-      padding-right: 32px;
-      min-width: 180px;
-    }
+    font-size: 14px;
   }
 
   td {
+    color: #14151A;
+    font-size: 14px;
+  }
+}
+
+.card {
+  padding: 16px;
+  border: 1px solid #dee0e3;
+  border-radius: 8px;
+  background: white;
+}
+
+.cardHeader {
+  margin-bottom: 12px;
+}
+
+.date {
+  color: #0F132499;
+  font-size: 14px;
+}
+
+.messageContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  > span:not(.userLink) {
     color: #333;
-    white-space: nowrap;
-    
-    &:first-child {
-      padding-right: 32px;
-      min-width: 180px;
-    }
-    
-    &:last-child {
-      width: 100%;
-      min-width: 400px;
-      white-space: normal;
-    }
   }
 }
 
 .userLink {
-  display: inline;
-  margin-left: 4px;
+  color: #741de2;
   font-weight: 500;
-  color: #924FE8;
+  font-size: 14px;
   text-decoration: underline;
-  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 
-.statusContainer {
-  display: inline-block;
-  margin-left: 4px;
-}
-
-.viewToggle {
-    display: none;
-    padding: 16px;
-    gap: 0;
-    justify-content: flex-end;
-}
-
-.toggleButton {
-    padding: 8px 12px;
-    border: 1px solid #dee0e3;
-    background: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0;
-
-    &:first-child {
-        border-radius: 8px 0 0 8px;
-    }
-
-    &:last-child {
-        border-radius: 0 8px 8px 0;
-        border-left: none;
-    }
-
-    &.active {
-        background: #924FE8;
-        border-color: #924FE8;
-        svg path {
-            fill: white;
-        }
-
-        &:not(:last-child) {
-            border-right: 1px solid #924FE8;
-        }
-    }
-}
-
-.cardsContainer {
-    display: none;
-}
-
-.card {
-    border: 1px solid #dee0e3;
-    border-radius: 10px;
-    padding: 16px;
-    background: white;
-    margin-bottom: 10px;
-}
-
-.cardHeader {
-    margin-bottom: 12px;
-}
-
-.cardDate {
-    color: #0F132499;
-    font-size: 14px;
-}
-
-.cardBody {
-    color: #14151A;
-}
-
-.cardAction {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-wrap: wrap;
-}
-
-@media (max-width: 600px) {
-    .viewToggle {
-        display: flex;
-    }
-    
-    .table[data-view-mode='cards'] {
-        display: none;
-    }
-    
-    .cardsContainer[data-view-mode='table'] {
-        display: none;
-    }
-    
-    .cardsContainer[data-view-mode='cards'] {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        // padding: 16px;
-    }
-
-    .container[data-view-mode='cards'] {
-        background-color: transparent;
-        border: 0;
-        box-shadow: none;
-    }
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
 } 

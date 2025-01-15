@@ -10,9 +10,10 @@ interface RowMenuProps {
     color?: string;
   }>;
   variant?: 'card' | 'default';
+  client?: any;
 }
 
-const RowMenu: React.FC<RowMenuProps> = ({ options, variant }) => {
+const RowMenu: React.FC<RowMenuProps> = ({ options, variant, client }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -28,7 +29,9 @@ const RowMenu: React.FC<RowMenuProps> = ({ options, variant }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+  useEffect(() => {
 
+  }, [client])
   const handleButtonClick = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();

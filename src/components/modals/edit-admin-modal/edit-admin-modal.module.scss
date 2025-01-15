@@ -5,6 +5,14 @@
 .inputWrapper {
     margin-top: 20px;
     position: relative;
+    margin-bottom: 16px;
+
+    .error {
+        color: #98A2B3;
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 400;
+    }
 }
 
 .passwordInput {

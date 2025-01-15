@@ -1,0 +1,134 @@
+.content {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filterSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.filterButton {
+    width: 100%;
+    height: 40px;
+    background: #0A0F290A;
+    border: none;
+    border-radius: 12px;
+    color: #14151A;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: #0A0F2914;
+    }
+}
+
+.typeLabel {
+    color: #14151A;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.typeSelector {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    background: #0A0F2914;
+    border-radius: 12px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.typeOption {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #0F132499;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+
+    &.active {
+        background: white;
+        color: #14151A;
+    }
+
+    &:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.5);
+    }
+}
+
+.actions {
+    display: flex;
+    margin-top: 24px;
+    flex-direction: column;
+    gap: 8px;
+
+    button {
+        width: 100% !important;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+        
+        button {
+            width: 100% !important;
+        }
+    }
+} 
+
+.appliedFilters {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    
+    .filterLabel {
+        color: #0F132499;
+        font-size: 14px;
+        font-weight: 400;
+        padding-top: 6px;
+    }
+}
+
+.filterTag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid #DEE0E3;
+    border-radius: 10px;
+    color: #14151A;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 6px;
+    width: fit-content;
+
+    .tagLabel {
+        color: #14151A;
+        font-weight: 500;
+    }
+
+    :global(.statusGroup) {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+} 

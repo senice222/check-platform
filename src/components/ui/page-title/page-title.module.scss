@@ -239,7 +239,12 @@
     }
   }
 }
-
+@media screen and (max-width: 1628px) {
+  .top {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
 
 // @media screen and (max-width: 992px) {
 //   .wrapper {

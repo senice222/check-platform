@@ -1,5 +1,5 @@
 .pageContainer {
-   // padding: 24px;
+   padding: 24px;
 }
 
 .header {
@@ -83,7 +83,6 @@
 @media (max-width: 768px) {
    .pageContainer {
       padding: 0;
-      overflow-x: hidden;
    }
 
    .header {
@@ -97,13 +96,5 @@
    .mobileTabsContainer {
       display: flex;
       gap: 2px;
-   }
-
-   .topic {
-      display: none;
-   }
-
-   .mobileFilterContainer {
-      display: block;
    }
 }

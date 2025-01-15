@@ -30,8 +30,12 @@
       gap: 8px;
       
       span {
-         color: #924FE8;
+         color: #0F132499;
          font-size: 14px;
+
+         &.active {
+            color: #924FE8;
+         }
       }
       
       button {

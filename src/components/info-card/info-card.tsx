@@ -19,9 +19,18 @@ interface InfoCardProps {
   editing: boolean;
   fields?: Field[];
   isCustomSelect?: boolean;
-  company?: Company;
-  companies?: Company[];
-  onCompanyChange?: (company: Company) => void;
+  seller?: {
+    id: string;
+    name: string;
+    inn: string;
+  };
+  sellers?: Array<{
+    id: string;
+    name: string;
+    inn: string;
+    type: 'elite' | 'white';
+  }>;
+  onSellerChange?: (sellerId: string, sellerInn: string) => void;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -29,28 +38,44 @@ const InfoCard: React.FC<InfoCardProps> = ({
   editing,
   fields,
   isCustomSelect,
-  company,
-  companies,
-  onCompanyChange
+  seller,
+  sellers,
+  onSellerChange
 }) => {
+  const formatSellersForSelect = () => {
+    return sellers?.map(s => ({
+      name: s.name,
+      inn: s.inn,
+      type: s.type === 'elite' ? 'elit' : 'standart'
+    })) || [];
+  };
+
   return (
     <div className={`${s.infoCard} ${editing ? s.editingInfoCard : ""}`}>
       <h2>{title}</h2>
-      {isCustomSelect && company && companies && onCompanyChange ? (
+      {isCustomSelect && seller && sellers && onSellerChange ? (
         <>
           <div className={s.infoItem}>
             <p>Компания</p>
-            <div className={`${s.link} ${company.type === 'elit' ? s.elit : ''}`}>
+            <div className={s.link}>
               {editing ? (
                 <CustomSelect
-                  companies={companies}
-                  defaultValue={company}
-                  onChange={onCompanyChange}
+                  companies={formatSellersForSelect()}
+                  defaultValue={{
+                    name: seller.name,
+                    inn: seller.inn,
+                    type: 'standart'
+                  }}
+                  onChange={(selected) => {
+                    const originalSeller = sellers.find(s => s.inn === selected.inn);
+                    if (originalSeller) {
+                      onSellerChange(originalSeller.id, originalSeller.inn);
+                    }
+                  }}
                 />
               ) : (
                 <>
-                  <h3>{company.name}</h3>
-                  {company.type === "elit" && <div className={s.elitMark}>Элитная</div>}
+                  <h3>{seller.name}</h3>
                   <ArrowLink />
                 </>
               )}
@@ -64,13 +89,13 @@ const InfoCard: React.FC<InfoCardProps> = ({
                   <Input
                     disabled={true}
                     noMargin={true}
-                    value={company.inn}
+                    value={seller.inn}
                     onChange={() => {}}
                   />
                 </div>
               ) : (
                 <>
-                  <h3>{company.inn}</h3>
+                  <h3>{seller.inn}</h3>
                   <ArrowLink />
                 </>
               )}

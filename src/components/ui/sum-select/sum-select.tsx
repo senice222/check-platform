@@ -24,7 +24,12 @@ const SumSelect: React.FC<SumSelectProps> = ({ onApply }) => {
   }, []);
 
   const handleApply = () => {
-    onApply(fromValue, toValue);
+    console.log('Applying sum filter:', { from: fromValue, to: toValue });
+    if (fromValue || toValue) {
+        onApply(fromValue, toValue);
+    } else {
+        onApply('', '');
+    }
     setIsOpen(false);
   };
 

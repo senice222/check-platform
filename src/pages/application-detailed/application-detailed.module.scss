@@ -108,6 +108,11 @@
       background-color: #f7f7f8;
       border: 1px solid #dee0e3;
       border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100%;
       p {
         color: #0f132499;
         font-size: 14px;
@@ -165,4 +170,19 @@
   .infoList {
     flex-wrap: wrap;
   }
+}
+
+.section {
+    margin-top: 40px;
+}
+
+.sectionTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #14151A;
+    margin-bottom: 24px;
+}
+
+.checksTable {
+    margin-top: 40px;
 }

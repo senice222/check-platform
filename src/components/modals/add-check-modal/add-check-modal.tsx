@@ -39,6 +39,10 @@ const AddCheckModal: FC<Props> = ({
 
   // Форматирование числа для отображения
   const formatNumber = (num: number): string => {
+    console.log(new Intl.NumberFormat('ru-RU', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(num))
     return new Intl.NumberFormat('ru-RU', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -76,18 +80,25 @@ const AddCheckModal: FC<Props> = ({
     }
   }, [isOpened]);
 
+  // Расчет общей суммы с НДС
+  const calculateTotalWithVat = (quantity: string, priceWithVat: string) => {
+    const qty = parseFloat(quantity.replace(/[^\d.-]/g, '') || '0');
+    const price = parseFloat(priceWithVat.replace(/[^\d.-]/g, '') || '0');
+    return qty * price;
+  };
+
+  // Расчет НДС (20% от суммы с НДС)
+  const calculateVat = (totalWithVat: number) => {
+    // НДС составляет 20/120 от суммы с НДС
+    return totalWithVat * (20 / 120);
+  };
+
+  // В useEffect для обновления значений
   useEffect(() => {
     if (quantity && priceWithVat) {
-      const quantityNum = cleanNumberString(quantity);
-      const priceNum = cleanNumberString(priceWithVat);
-      
-      if (!isNaN(quantityNum) && !isNaN(priceNum)) {
-        const total = quantityNum * priceNum;
-        const vatAmount = total * 0.2;
-        
-        setTotalWithVat(formatNumber(total));
-        setVat(formatNumber(vatAmount));
-      }
+      const total = calculateTotalWithVat(quantity, priceWithVat);
+      setTotalWithVat(formatNumber(total));
+      setVat(formatNumber(calculateVat(total)));
     } else {
       setTotalWithVat('0.00');
       setVat('0.00');
@@ -99,19 +110,28 @@ const AddCheckModal: FC<Props> = ({
   };
 
   const handleSubmit = () => {
-    const checkData: CheckData = {
-      id: editData?.id,
-      date,
-      product,
-      unit,
-      quantity,
-      priceWithVAT: formatNumber(cleanNumberString(priceWithVat)),
-      totalWithVAT: totalWithVat,
-      vat20: vat
+    if (!date || !product || !quantity || !unit || !priceWithVat) {
+        addNotification('Заполните все поля', 'error');
+        return;
+    }
+
+    const quantityNum = parseFloat(quantity.replace(/[^\d.-]/g, ''));
+    const priceNum = parseFloat(priceWithVat.replace(/[^\d.-]/g, '').replace(',', '.'));
+    const totalNum = quantityNum * priceNum;
+    const vatNum = totalNum * (20 / 120); // НДС 20% от суммы с НДС
+
+    const checkData = {
+        date,
+        product,
+        unit,
+        quantity: quantity,
+        priceWithVAT: priceNum.toFixed(2),
+        totalWithVAT: totalNum.toFixed(2),
+        vat20: vatNum.toFixed(2)
     };
 
     onSubmit(checkData);
-    setOpen(false);
+    handleClose();
   };
 
   return (
@@ -185,14 +205,14 @@ const AddCheckModal: FC<Props> = ({
           label="Отмена" 
           variant="white"
           onClick={() => setOpen(false)}
-          style={{width: "100%", height: "40px"}}
+          style={{width: "100%", minHeight: "40px"}}
           styleLabel={{fontSize: "14px", fontWeight: "500"}}
         />
         <Button 
           label={editData ? "Сохранить изменения" : "Добавить чек"}
           variant="purple"
           onClick={handleSubmit}
-          style={{width: "100%", height: "40px"}}
+          style={{width: "100%", minHeight: "40px"}}
           styleLabel={{fontSize: "14px", fontWeight: "500"}}
         />
       </div>

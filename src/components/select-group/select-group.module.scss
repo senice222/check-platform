@@ -3,6 +3,21 @@
   flex-direction: column;
   gap: 12px;
   margin: 24px 0;
+
+  &.forceMobileView,
+  &.mobileView {
+    margin: 0;
+    
+    .selectGroup {
+      flex-direction: column;
+      gap: 16px;
+
+      [data-select-type] {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  }
 }
 
 .selectGroup {

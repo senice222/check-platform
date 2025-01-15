@@ -1,3 +1,9 @@
+.statusGroup {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
 .badge {
   padding: 4px 8px;
   border-radius: 4px;
@@ -25,4 +31,14 @@
 .us_paid {
   background-color: #e3eafd;
   color: #133a9a;
+}
+
+.blocked {
+  background-color: #FCE5E4;
+  color: #9A1C13;
+}
+
+.more {
+  background-color: #F7F7F8;
+  color: #0F132499;
 }

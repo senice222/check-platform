@@ -18,6 +18,14 @@ interface SelectProps {
   onOptionChange: (options: SelectOption[]) => void;
 }
 
+const mobilePlaceholders: { [key: string]: string } = {
+  'продавец': 'Выберите нужного продавца',
+  'клиент': 'Выберите нужного клиента',
+  'компания': 'Выберите нужную компанию',
+  'статус': 'Выберите нужный статус',
+  'сумма': 'Укажите сумму'
+};
+
 const Select: React.FC<SelectProps> = ({
   icon,
   label,
@@ -25,6 +33,7 @@ const Select: React.FC<SelectProps> = ({
   options,
   onOptionChange,
 }) => {
+  
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +49,14 @@ const Select: React.FC<SelectProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const getPlaceholder = (str: string) => {
+    if (type.includes('mobile')) {
+      return mobilePlaceholders[str.toLowerCase()] || 'Выберите значение';
+    }
+    return label;
+  };
+  // console.log(type, 'type')
 
   return (
     <div className={styles.selectWrapper} ref={selectRef} data-select-type={type}>
@@ -70,7 +87,7 @@ const Select: React.FC<SelectProps> = ({
           {type.includes('mobile') 
             ? type.includes('sum')
               ? 'от - до'
-              : 'Выберите нужных ' + label.toLowerCase().slice(3)
+              : getPlaceholder(label)
             : label
           }
         </span>

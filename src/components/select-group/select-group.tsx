@@ -8,6 +8,9 @@ import SumSelect from '../ui/sum-select/sum-select';
 import AppliedFilters from '../ui/applied-filters/applied-filters';
 import { ApplicationStatus, getAllStatuses, STATUS_LABELS } from '../../constants/statuses';
 import { FilterState } from '../../types/filter-state';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchSelectors } from '../../store/slices/selectorsSlice';
+import { RootState, AppDispatch } from '../../store/store';
 
 interface Filters {
   clients: string[];
@@ -27,6 +30,9 @@ interface SelectGroupProps {
   onFiltersChange?: (filters: FilterState) => void;
   hideClientFilter?: boolean;
   hideStatusFilter?: boolean;
+  hideCompanyFilter?: boolean;
+  hideCompanyFilterDisplay?: boolean;
+  useMobileView?: boolean;
 }
 
 interface SelectOption {
@@ -59,167 +65,130 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
   onFiltersChange,
   className,
   hideClientFilter = false,
-  hideStatusFilter = false
+  hideStatusFilter = false,
+  hideCompanyFilter = false,
+  hideCompanyFilterDisplay = false,
+  useMobileView = false
 }) => {
-  const isMobile = className?.includes('mobileView');
+  const dispatch = useDispatch<AppDispatch>();
+  const { companies, sellers, users, isLoading } = useSelector((state: RootState) => state.selectors);
+
+  // Загружаем селекторы только один раз при монтировании
+  useEffect(() => {
+    if (!companies.length && !sellers.length && !users.length) {
+      dispatch(fetchSelectors());
+    }
+  }, [dispatch, companies.length, sellers.length, users.length]);
+
+  const isMobile = useMobileView || className?.includes('mobileView');
 
   // Состояния для фильтров
   const [sumFilter, setSumFilter] = useState<{ from: string; to: string } | undefined>();
   const [dateFilter, setDateFilter] = useState<string>('');
 
-  // Получаем все уникальные значения из исходных данных
-  const allUniqueValues = useMemo(() => {
-    if (!initialData?.length) {
-      return {
-        clients: [],
-        companies: [],
-        sellers: [],
-        statuses: []
-      };
-    }
-
-    return {
-      clients: Array.from(new Set(initialData.map(item => ({ 
-        id: item.client.id, 
-        name: item.client.name 
-      })))),
-      companies: Array.from(new Set(initialData.map(item => item.company))),
-      sellers: Array.from(new Set(initialData.map(item => item.seller))),
-      statuses: Array.from(new Set(initialData.map(item => item.status)))
-    };
-  }, [initialData]);
-
-  // Инициализируем состояние опций с учетом всех возможых значений из initialData
-  const [selectOptions, setSelectOptions] = useState<SelectOptions>(() => {
-    const mobileFilters = filters as FilterState | undefined;
-    
-    return {
-      client: allUniqueValues.clients.map(client => ({
-        id: client.id,
-        label: client.name,
-        checked: mobileFilters?.users?.some(user => user.id === client.id) || false
-      })),
-      company: allUniqueValues.companies.map(name => ({
-        id: name,
-        label: name,
-        checked: mobileFilters?.companies?.includes(name) || false
-      })),
-      seller: allUniqueValues.sellers.map(name => ({
-        id: name,
-        label: name,
-        checked: mobileFilters?.sellers?.includes(name) || false
-      })),
-      status: getAllStatuses().map(status => ({
-        id: status,
-        label: STATUS_LABELS[status],
-        checked: mobileFilters?.status?.split(',').includes(status) || false
-      }))
-    };
-  });
-
-  // Обновляем опции при изменении фильтров, сохраняя все возможные значения
-  useEffect(() => {
-    if (!initialData?.length) return;
-
-    const mobileFilters = filters as FilterState | undefined;
-    
-    setSelectOptions(prev => ({
-      ...prev,
-      client: allUniqueValues.clients.map(client => ({
-        id: client.id,
-        label: client.name,
-        checked: mobileFilters?.users?.some(user => user.id === client.id) || 
-                prev.client.find(opt => opt.id === client.id)?.checked || 
-                false
-      })),
-      company: allUniqueValues.companies.map(name => ({
-        id: name,
-        label: name,
-        checked: mobileFilters?.companies?.includes(name) || 
-                prev.company.find(opt => opt.id === name)?.checked || 
-                false
-      })),
-      seller: allUniqueValues.sellers.map(name => ({
-        id: name,
-        label: name,
-        checked: mobileFilters?.sellers?.includes(name) || 
-                prev.seller.find(opt => opt.id === name)?.checked || 
-                false
-      })),
-      status: getAllStatuses().map(status => ({
-        id: status,
-        label: STATUS_LABELS[status],
-        checked: mobileFilters?.status?.split(',').includes(status) || 
-                prev.status.find(opt => opt.id === status)?.checked || 
-                false
-      }))
-    }));
-  }, [filters, initialData, allUniqueValues]);
+  // Мемоизируем опции селектов
+  const selectOptions = useMemo(() => ({
+    client: users.map(user => ({
+      id: user.id,
+      label: user.name,
+      checked: filters?.users?.some(u => u.id === user.id) || false
+    })),
+    company: companies.map(company => ({
+      id: company.id,
+      label: company.name,
+      checked: filters?.companies?.includes(company.id) || false
+    })),
+    seller: sellers.map(seller => ({
+      id: seller.id,
+      label: seller.name,
+      checked: filters?.sellers?.includes(seller.id) || false
+    })),
+    status: getAllStatuses().map(status => ({
+      id: status,
+      label: STATUS_LABELS[status],
+      checked: filters?.statuses?.includes(status) || false
+    }))
+  }), [users, companies, sellers, filters]);
 
   const handleOptionChange = (key: keyof SelectOptions, newOptions: Array<{ id: string; label: string; checked: boolean }>) => {
-    setSelectOptions(prev => ({
-      ...prev,
-      [key]: newOptions
-    }));
-
-    // Формируем новые фильтры на основе всех текущих опций
-    const newFilters = {
-      clients: key === 'client' ? newOptions.filter(opt => opt.checked).map(opt => opt.id) : selectOptions.client.filter(opt => opt.checked).map(opt => opt.id),
-      companies: key === 'company' ? newOptions.filter(opt => opt.checked).map(opt => opt.id) : selectOptions.company.filter(opt => opt.checked).map(opt => opt.id),
-      sellers: key === 'seller' ? newOptions.filter(opt => opt.checked).map(opt => opt.id) : selectOptions.seller.filter(opt => opt.checked).map(opt => opt.id),
-      statuses: key === 'status' ? newOptions.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[] : selectOptions.status.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[],
-      sum: sumFilter
-    };
-
+    // console.log('SelectGroup handleOptionChange:', key, newOptions);
+    
     if (isMobile && onFiltersChange && filters) {
-      onFiltersChange({
+      const updatedFilters = {
         ...filters,
-        users: key === 'client' ? newOptions.filter(opt => opt.checked).map(id => {
-          const client = initialData?.find(item => item.client.id === id.id)?.client;
-          return client ? { id: client.id, name: client.name } : { id: id.id, name: id.id };
-        }) : filters.users,
-        companies: key === 'company' ? newFilters.companies : filters.companies,
-        sellers: key === 'seller' ? newFilters.sellers : filters.sellers,
-        status: key === 'status' ? newFilters.statuses.join(',') : filters.status
-      });
+        users: key === 'client' 
+          ? newOptions.filter(opt => opt.checked).map(opt => ({ id: opt.id, name: opt.label }))
+          : filters.users,
+        companies: key === 'company' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id) 
+          : filters.companies,
+        sellers: key === 'seller' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id) 
+          : filters.sellers,
+        status: key === 'status' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id).join(',')
+          : filters.status,
+        statuses: key === 'status'
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[]
+          : filters.statuses
+      };
+      
+      // console.log('SelectGroup updating filters:', updatedFilters);
+      onFiltersChange(updatedFilters);
     } else if (onFilterChange) {
-      onFilterChange(newFilters);
+      // Для десктопной версии
+      const desktopFilters = {
+        clients: key === 'client' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id)
+          : selectOptions.client.filter(opt => opt.checked).map(opt => opt.id),
+        companies: key === 'company' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id)
+          : selectOptions.company.filter(opt => opt.checked).map(opt => opt.id),
+        sellers: key === 'seller' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id)
+          : selectOptions.seller.filter(opt => opt.checked).map(opt => opt.id),
+        statuses: key === 'status' 
+          ? newOptions.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[]
+          : selectOptions.status.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[],
+        sum: sumFilter
+      };
+
+      onFilterChange(desktopFilters);
     }
   };
 
   const handleSumFilterApply = (from: string, to: string) => {
-    const newSumFilter = { from, to };
+    // console.log('Sum filter values:', { from, to });
+    
+    const newSumFilter = from || to ? { from, to } : undefined;
     setSumFilter(newSumFilter);
     
     const newFilters: Filters = {
-      clients: selectOptions.client.filter(opt => opt.checked).map(opt => opt.id),
-      companies: selectOptions.company.filter(opt => opt.checked).map(opt => opt.id),
-      sellers: selectOptions.seller.filter(opt => opt.checked).map(opt => opt.id),
-      statuses: selectOptions.status.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[],
-      sum: from || to ? newSumFilter : undefined
+        clients: selectOptions.client.filter(opt => opt.checked).map(opt => opt.id),
+        companies: selectOptions.company.filter(opt => opt.checked).map(opt => opt.id),
+        sellers: selectOptions.seller.filter(opt => opt.checked).map(opt => opt.id),
+        statuses: selectOptions.status.filter(opt => opt.checked).map(opt => opt.id) as ApplicationStatus[],
+        sum: newSumFilter
     };
 
     if (isMobile && onFiltersChange && filters) {
-      onFiltersChange({
-        ...filters,
-        users: newFilters.clients.map(id => {
-          const client = initialData?.find(item => item.client.id === id)?.client;
-          return client ? { id: client.id, name: client.name } : { id, name: id };
-        }),
-        status: newFilters.statuses.length === 1 ? newFilters.statuses[0] as ApplicationStatus : '',
-      });
+        onFiltersChange({
+            ...filters,
+            users: newFilters.clients.map(id => {
+                const client = initialData?.find(item => item.user._id === id)?.client;
+                return client ? { id: client.id, name: client.name } : { id, name: id };
+            }),
+            status: newFilters.statuses.length === 1 ? newFilters.statuses[0] as ApplicationStatus : '',
+            sum: newSumFilter
+        });
     } else if (onFilterChange) {
-      onFilterChange(newFilters);
+        onFilterChange(newFilters);
     }
   };
 
   const handleDateChange = (start: string, end: string) => {
-    if (isMobile) {
-      onDateChange(start, end);
-    } else {
-      setDateFilter(`${start} – ${end}`);
-      onDateChange(start, end);
-    }
+    setDateFilter(start && end ? `${start} – ${end}` : '');
+    onDateChange(start, end);
   };
 
   const handleRemoveDateFilter = () => {
@@ -228,30 +197,7 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
   };
 
   const handleRemoveFilter = (type: string) => {
-    const newOptions = { ...selectOptions };
-    
-    // Очищаем только выбранный тип фильтра
-    switch(type) {
-      case 'client':
-        newOptions.client = newOptions.client.map(opt => ({ ...opt, checked: false }));
-        break;
-      case 'company':
-        newOptions.company = newOptions.company.map(opt => ({ ...opt, checked: false }));
-        break;
-      case 'seller':
-        newOptions.seller = newOptions.seller.map(opt => ({ ...opt, checked: false }));
-        break;
-      case 'status':
-        newOptions.status = newOptions.status.map(opt => ({ ...opt, checked: false }));
-        break;
-      case 'sum':
-        setSumFilter(undefined);
-        break;
-    }
-
-    setSelectOptions(newOptions);
-    
-    // Формируем новые фильтры, где очищен только выбранный тип
+    // Формируем новые фильтры в зависимости от типа
     const newFilters = {
       clients: type === 'client' ? [] : selectOptions.client.filter(opt => opt.checked).map(opt => opt.id),
       companies: type === 'company' ? [] : selectOptions.company.filter(opt => opt.checked).map(opt => opt.id),
@@ -260,7 +206,13 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
       sum: type === 'sum' ? undefined : sumFilter
     };
 
+    // Если это фильтр суммы, обновляем состояние суммы
+    if (type === 'sum') {
+      setSumFilter(undefined);
+    }
+
     if (isMobile && onFiltersChange && filters) {
+      // console.log('filters231', filters.users);
       onFiltersChange({
         ...filters,
         users: type === 'client' ? [] : filters.users,
@@ -273,36 +225,40 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
     }
   };
 
-  const options = [
-    !hideClientFilter && { 
-      key: 'client' as const, 
-      type: isMobile ? 'mobile-client' : 'client', 
-      icon: <User />, 
-      label: 'По клиенту', 
-      options: selectOptions.client 
-    },
-    { 
-      key: 'company' as const, 
-      type: isMobile ? 'mobile-company' : 'company', 
-      icon: <Company />, 
-      label: 'По компаниям', 
-      options: selectOptions.company 
-    },
-    { 
-      key: 'seller' as const, 
-      type: isMobile ? 'mobile-seller' : 'seller', 
-      icon: <Seller />, 
-      label: 'По продавцу', 
-      options: selectOptions.seller 
-    },
-    !hideStatusFilter && { 
-      key: 'status' as const, 
-      type: isMobile ? 'mobile-status' : 'status', 
-      icon: <Flag />, 
-      label: 'По статусам', 
-      options: selectOptions.status 
-    },
-  ].filter((option): option is Option => Boolean(option));
+  const options: Option[] = useMemo(() => {
+    const allOptions = [
+      !hideClientFilter && {
+        key: 'client',
+        type: isMobile ? 'mobile' : 'multiple',
+        icon: <User />,
+        label: 'Клиент',
+        options: selectOptions.client
+      },
+      !hideCompanyFilter && !hideCompanyFilterDisplay && {
+        key: 'company',
+        type: isMobile ? 'mobile-company' : 'company',
+        icon: <Company />,
+        label: 'Компания',
+        options: selectOptions.company
+      },
+      {
+        key: 'seller',
+        type: isMobile ? 'mobile' : 'multiple',
+        icon: <Seller />,
+        label: 'Продавец',
+        options: selectOptions.seller
+      },
+      !hideStatusFilter && {
+        key: 'status',
+        type: isMobile ? 'mobile-status' : 'status',
+        icon: <Flag />,
+        label: 'Статус',
+        options: selectOptions.status
+      }
+    ].filter(Boolean) as Option[];
+
+    return allOptions;
+  }, [selectOptions, hideClientFilter, hideStatusFilter, hideCompanyFilter, hideCompanyFilterDisplay, isMobile]);
 
   return (
     <div className={`${styles.filterContainer} ${className || ''}`}>
@@ -310,9 +266,12 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
         {!isMobile && (
           <DateSelector
             onDateChange={handleDateChange}
+            defaultStartDate={filters.date?.start}
+            defaultEndDate={filters.date?.end}
+            type={isMobile ? 'mobile' : undefined}
           />
         )}
-        {options.map((option) => (
+        {!isLoading && options.map((option) => (
           <Select
             key={option.key}
             icon={option.icon}
@@ -334,6 +293,7 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
           sumFilter={sumFilter}
           onRemoveFilter={handleRemoveFilter}
           onRemoveDateFilter={handleRemoveDateFilter}
+          hideCompanyFilterDisplay={hideCompanyFilterDisplay}
         />
       )}
     </div>

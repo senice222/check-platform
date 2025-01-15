@@ -3,29 +3,55 @@ import { useNavigate } from 'react-router-dom';
 import s from './clients.module.scss'
 import Button from '../../components/ui/button/button'
 import { Plus, DetailedAvatar, SearchIcon, TableIcon, CardIcon, ClientAvatar } from '../../components/svgs/svgs'
-import { clientsData } from '../../mock/clients'
 import RowMenu from '../../components/ui/row-menu/row-menu'
 import AddClientModal from '../../components/modals/add-client-modal/add-client-modal';
 import ChangeUserInfoModal from '../../components/modals/change-user-info-modal/change-user-info-modal';
 import DeleteUserModal from '../../components/modals/delete-user-modal/delete-user-modal';
 import SearchBottomSheet from '../../components/modals/search-bottom-sheet/search-bottom-sheet';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { getAllClients, deleteClient } from '../../store/slices/clientSlice';
+import { useNotification } from '../../contexts/NotificationContext/NotificationContext';
+import StatusBadge from '../../components/ui/status-badge/status-badge';
+
+interface Client {
+    _id: string;
+    name: string;
+    key: string;
+    canSave: boolean;
+    isBlocked: boolean;
+    createdAt: string;
+    activeApplications: number;
+    totalApplications: number;
+    registrationDate: string;
+}
 
 const Clients = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { addNotification } = useNotification();
+  const { clients, isLoading } = useAppSelector(state => state.client);
+  console.log(clients,11)
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isChangeUserInfo, setIsChangeUserInfo] = useState(false);
-  const [currentUser, setCurrentUser] = useState<typeof clientsData[0] | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [isDeleteUser, setIsDeleteUser] = useState(false);
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [isMobile, setIsMobile] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const filteredData = useMemo(() => {
-    return clientsData.filter(item =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery]);
+  const [showSearch, setShowSearch] = useState(true);
+  console.log(clients, 11)
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        await dispatch(getAllClients()).unwrap();
+      } catch (error: any) {
+        addNotification(error.message || 'Ошибка при загрузке клиентов', 'error');
+      }
+    };
+
+    loadClients();
+  }, [dispatch, addNotification]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,53 +59,89 @@ const Clients = () => {
     };
 
     setIsMobile(window.innerWidth <= 600);
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const getRowMenuOptions = (row: typeof clientsData[0]) => [
+  const filteredData = useMemo(() => {
+    if (!clients) return [];
+    return clients.filter((client: Client) =>
+        client?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [clients, searchQuery]);
+
+  const handleDeleteClient = async () => {
+    if (!currentUser) return;
+    console.log(currentUser);
+    try {
+      await dispatch(deleteClient(currentUser._id)).unwrap();
+      addNotification('Клиент успешно удален', 'success');
+      setIsDeleteUser(false);
+      setCurrentUser(null);
+    } catch (error: any) {
+      addNotification(error.message || 'Ошибка при удалении клиента', 'error');
+    }
+  };
+
+  const getRowMenuOptions = (client: any) => [
     {
       id: 'profile',
       label: 'Профиль клиента',
-      onClick: () => navigate(`/admin/detailed-client/${row.id}`)
+      onClick: () => navigate(`/admin/detailed-client/${client._id}`)
     },
     {
       id: 'applications',
       label: 'Заявки клиента',
-      onClick: () => console.log('Заявки клиента', row.id)
+      onClick: () => navigate(`/admin/detailed-client/${client._id}`)
     },
     {
       id: 'edit',
       label: 'Редактировать клиента',
       onClick: () => {
-        setCurrentUser(row);
+        setCurrentUser(client);
         setIsChangeUserInfo(true);
       }
     },
     {
       id: 'link',
       label: 'Ссылка на вход для клиента',
-      onClick: () => console.log('Ссылка на вход', row.id)
+      onClick: () => {
+        console.log(client, 12)
+        const link = `${window.location.origin}/client/login/${client.key}`;
+        navigator.clipboard.writeText(link)
+          .then(() => addNotification('Ссылка скопирована', 'success'))
+          .catch(() => addNotification('Ошибка при копировании', 'error'));
+      }
     },
     {
       id: 'block',
-      label: 'Заблокировать клиента',
+      label: client.isBlocked ? 'Разблокировать клиента' : 'Удалить клиента',
       onClick: () => {
-        setCurrentUser(row);
+        console.log(213)
+        setCurrentUser(client);
         setIsDeleteUser(true);
       },
       danger: true
     }
   ];
 
-  const renderCard = (row: typeof clientsData[0]) => (
+  const renderCard = (row: any) => (
     <div  className={s.card} key={row.id}>
       <div className={s.cardBody}>
         <div className={s.header_clients}>
           <div onClick={() => navigate(`/admin/detailed-client/${111}`)} className={s.userCell}>
             <ClientAvatar />
-            <span className={s.userName}>{row.name}</span>
+            <div className={s.userInfo}>
+              <span className={s.userName}>{row.name}</span>
+              {row.isBlocked && (
+                <StatusBadge 
+                  customStatus={{
+                    label: 'Заблокировано',
+                    type: 'blocked'
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className={s.cardActions}>
             <RowMenu options={getRowMenuOptions(row)} />
@@ -108,8 +170,20 @@ const Clients = () => {
   return (
     <div className={s.clients}>
       <AddClientModal isOpened={isCreating} setOpen={setIsCreating} />
-      <ChangeUserInfoModal isOpened={isChangeUserInfo} setOpen={setIsChangeUserInfo} handleUpdate={() => { }} defaultValue={currentUser?.name || ''} />
-      <DeleteUserModal isOpened={isDeleteUser} setOpen={setIsDeleteUser} isBlocking={true} name={currentUser?.name || ''} />
+      <ChangeUserInfoModal 
+        isOpened={isChangeUserInfo} 
+        setOpen={setIsChangeUserInfo} 
+        defaultValue={currentUser?.name || ''} 
+        clientId={currentUser?._id || ''}
+        canSave={currentUser?.canSave}
+      />
+      <DeleteUserModal 
+        isOpened={isDeleteUser} 
+        setOpen={setIsDeleteUser} 
+        isBlocking={currentUser?.isBlocked}
+        name={currentUser?.name || ''} 
+        clientId={currentUser?._id || ''}
+      />
       <div className={s.clients_header}>
         <h1>Клиенты</h1>
         <Button
@@ -146,15 +220,15 @@ const Clients = () => {
         </div>
       )}
 
-      <SearchBottomSheet<typeof clientsData[0]>
+      <SearchBottomSheet<any>
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        data={clientsData}
+        data={clients}
         renderCard={renderCard}
         filterFunction={(item, query) => 
-          item.name.toLowerCase().includes(query)
+          item?.name?.toLowerCase().includes(query.toLowerCase()) || false
         }
         emptyStateText={{
           title: 'Это поиск клиентов',
@@ -194,16 +268,26 @@ const Clients = () => {
             {filteredData.map((row) => (
               <tr  key={row.id}>
                 <td>
-                  <div onClick={() => navigate(`/admin/detailed-client/${111}`)} className={s.userCell}>
+                  <div onClick={() => navigate(`/admin/detailed-client/${row._id}`)} className={s.userCell}>
                     <DetailedAvatar />
-                    <span className={s.userName}>{row.name}</span>
+                    <div className={s.userInfo}>
+                      <span className={s.userName}>{row.name}</span>
+                      {row.isBlocked && (
+                        <StatusBadge 
+                          customStatus={{
+                            label: 'Заблокировано',
+                            type: 'blocked'
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
                 </td>
                 <td>{row.activeApplications}</td>
                 <td>{row.totalApplications}</td>
                 <td>{row.registrationDate}</td>
                 <td>
-                  <RowMenu options={getRowMenuOptions(row)} />
+                  <RowMenu client={row} options={getRowMenuOptions(row)} />
                 </td>
               </tr>
             ))}

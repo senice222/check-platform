@@ -10,6 +10,8 @@ interface DateSelectorProps {
   inputStyle?: boolean;
   label?: string;
   type?: string;
+  defaultStartDate?: string;
+  defaultEndDate?: string;
 }
 
 const DateSelector: React.FC<DateSelectorProps> = ({ 
@@ -19,19 +21,24 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   singleDate = false,
   inputStyle = false,
   label,
-  type
+  type,
+  defaultStartDate,
+  defaultEndDate
 }) => {
-  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
-  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(
+    defaultStartDate ? new Date(defaultStartDate) : null
+  );
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
+    defaultEndDate ? new Date(defaultEndDate) : null
+  );
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('ru-RU', { 
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit'
-    });
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`; // формат YYYY-MM-DD
   };
 
   const handleDateClick = (date: Date) => {
@@ -59,15 +66,20 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   };
 
   useEffect(() => {
+    if (singleDate && selectedStartDate) {
+      onDateChange(formatDate(selectedStartDate));
+    }
     if (selectedStartDate && selectedEndDate) {
       onDateChange(formatDate(selectedStartDate), formatDate(selectedEndDate));
     }
   }, [selectedStartDate, selectedEndDate]);
 
-  const clearSelection = () => {
+  const clearSelection = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setSelectedStartDate(null);
     setSelectedEndDate(null);
     onDateChange('', '');
+    setIsOpen(false);
   };
 
   const toggleCalendar = () => {
@@ -194,6 +206,11 @@ const DateSelector: React.FC<DateSelectorProps> = ({
     };
   }, [isOpen, closeOnClickOutside]);
 
+  useEffect(() => {
+    setSelectedStartDate(defaultStartDate ? new Date(defaultStartDate) : null);
+    setSelectedEndDate(defaultEndDate ? new Date(defaultEndDate) : null);
+  }, [defaultStartDate, defaultEndDate]);
+
   if (inputStyle) {
     return (
       <div className={styles.inputStyleWrapper}>
@@ -227,14 +244,16 @@ const DateSelector: React.FC<DateSelectorProps> = ({
       <div className={styles.dateSelector}>
         <div className={styles.selectedRange}>
           <span>По дате чеков</span>
-          {getSelectedDateRange() && (
-            <div className={styles.dateRange}>
-              <span>{getSelectedDateRange()}</span>
+          <div className={styles.dateRange}>
+            <span className={getSelectedDateRange() ? styles.active : ''}>
+              {getSelectedDateRange() || 'Все'}
+            </span>
+            {getSelectedDateRange() && (
               <button onClick={clearSelection}>
                 <Cross />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         {renderCalendar()}
       </div>

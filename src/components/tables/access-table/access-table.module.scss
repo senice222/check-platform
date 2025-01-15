@@ -256,3 +256,28 @@
     }
   }
 } 
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userName {
+  color: #924FE8;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.userLogin {
+  color: #475467;
+  font-size: 12px;
+}
+
+// Для карточек
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+} 

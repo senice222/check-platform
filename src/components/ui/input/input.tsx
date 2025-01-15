@@ -52,7 +52,7 @@ const Input = ({ label, error, value, onChange, placeholder, icon, toggleType, n
                </div>
             )}
          </div>
-         {error && <div className="input-error">{error}</div>}
+         {error && <span className={s.errorText}>{error}</span>}
       </div>
    )
 }

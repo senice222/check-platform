@@ -20,25 +20,21 @@ import CancelApplication from "../../modals/cancel-application/cancel-applicatio
 import s from "./page-title.module.scss";
 import IsEditingBar from "../../is-editing-bar/is-editing-bar";
 import ChooseStatus from "../../modals/choose-status/chose-status";
+import { useNavigate } from "react-router-dom";
 
 interface PageTitleProps {
-  title?: string;
+  title: string;
   statuses?: ApplicationStatus[];
   setStatuses?: (statuses: ApplicationStatus[]) => void;
-  date?: string;
   name?: string;
-  responsive_name?: string;
   editing?: boolean;
-  setEditing?: (value: boolean) => void;
-  noRightBtns?: boolean;
-  isUser?: boolean;
-  userDeskr?: string,
-  responsive_btns?: {text: string, onClick: () => void}[],
-  handleUpdateUser? : () => void,
-  setOpen?: () => void
+  setEditing?: (editing: boolean) => void;
+  onSave?: () => void;
+  onCancel?: () => void;
+  date?: string;
 }
 
-const PageTitle: FC<PageTitleProps> = ({
+const PageTitle: React.FC<PageTitleProps> = ({
   date,
   title,
   statuses = [],
@@ -52,7 +48,9 @@ const PageTitle: FC<PageTitleProps> = ({
   setEditing,
   responsive_name,
   responsive_btns,
-  setOpen
+  setOpen,
+  onSave,
+  onCancel
 }) => {
   const [statusesOpened, setStatusesOpened] = useState(false);
   const [canceling, setCanceling] = useState(false);
@@ -60,9 +58,9 @@ const PageTitle: FC<PageTitleProps> = ({
   const isMobile = window.innerWidth < 1000;
 
   const handleSave = () => {
-    setEditing?.(false);
+    onSave?.();
   };
-
+  const navigate = useNavigate();
   const handleEdit = () => {
     if (isUser) {
       return setOpen && setOpen();
@@ -71,7 +69,7 @@ const PageTitle: FC<PageTitleProps> = ({
   };
 
   const handleCancel = () => {
-    setCanceling(true);
+    onCancel?.();
   };
 
   const handleStatusChange = () => {
@@ -185,7 +183,7 @@ const PageTitle: FC<PageTitleProps> = ({
       <div className={s.responsiveHeader}>
         <div className={s.backBtn}>
           {editing ? <span onClick={handleCancel}>Отмена</span> : <><TopArrow />
-            <span>Назад</span></>}
+            <span onClick={() => navigate(-1)}>Назад</span></>}
         </div>
         <h2>{responsive_name}</h2>
         {responsive_btns ? responsive_btns.map((btn) => <button className={s.editBtn} onClick={btn.onClick}>{btn.text}</button>) : editing ? (
@@ -199,7 +197,7 @@ const PageTitle: FC<PageTitleProps> = ({
 
         <div className={s.globalLeft}>
 
-          <div className={s.backArrow}>
+          <div onClick={() => navigate(-1)} className={s.backArrow}>
             <BackArrow />
           </div>
           <div className={s.right}>

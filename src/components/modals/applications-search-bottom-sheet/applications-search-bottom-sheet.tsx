@@ -83,20 +83,25 @@ const ApplicationsSearchBottomSheet: React.FC<ApplicationsSearchBottomSheetProps
     };
 
     const filteredApplications = useMemo(() => {
+        if (!localSearchQuery) return [];
+        
+        const query = localSearchQuery.toLowerCase();
+        
         return applications.filter(item =>
-            item.id.toString().toLowerCase().includes(localSearchQuery.toLowerCase()) ||
-            item.client.name.toLowerCase().includes(localSearchQuery.toLowerCase()) ||
-            item.company.toLowerCase().includes(localSearchQuery.toLowerCase())
+            (item.id?.toString() || '').toLowerCase().includes(query) ||
+            (item.user?.name || '').toLowerCase().includes(query) ||
+            (item.company?.name || '').toLowerCase().includes(query)
         );
     }, [localSearchQuery, applications]);
 
-    const renderCard = (application: TableData) => (
-        <div className={styles.card} key={application.id}>
+    const renderCard = (application: TableData, index: number) => (
+        <div className={styles.card} key={application.id} 
+             onClick={() => navigate(`/admin/application/${application.id}`)}>
             <div className={styles.cardHeader}>
                 <div className={styles.topElement}>
-                    <span className={styles.cardId}>{application.id}</span>
+                    <span className={styles.cardId}>№{index + 1}</span>
                     <div className={styles.statuses}>
-                        {application.statuses.map((status, i) => (
+                        {application.status.map((status, i) => (
                             <StatusBadge key={i} status={status} />
                         ))}
                     </div>
@@ -106,13 +111,13 @@ const ApplicationsSearchBottomSheet: React.FC<ApplicationsSearchBottomSheetProps
                 <div className={styles.buyerSellerRow}>
                     <div className={styles.buyerBlock}>
                         <span className={styles.cardLabel}>Покупатель</span>
-                        <span className={styles.companyName}>{application.company}</span>
-                        <span className={styles.inn}>ИНН {application.client.inn}</span>
+                        <span className={styles.companyName}>{application.company.name}</span>
+                        <span className={styles.inn}>ИНН {application.user.inn}</span>
                     </div>
                     <div className={styles.sellerBlock}>
                         <span className={styles.cardLabel}>Продавец</span>
-                        <span className={styles.sellerName}>{application.seller}</span>
-                        <span className={styles.inn}>ИНН {application.client.inn}</span>
+                        <span className={styles.sellerName}>{application.seller.name}</span>
+                        <span className={styles.inn}>ИНН {application.seller.inn}</span>
                     </div>
                 </div>
                 <div className={styles.dateChecksRow}>
@@ -122,11 +127,11 @@ const ApplicationsSearchBottomSheet: React.FC<ApplicationsSearchBottomSheetProps
                 <div className={styles.userSumRow}>
                     <div className={styles.userBlock}>
                         <ClientIcon />
-                        <span className={styles.userName}>{application.client.name}</span>
+                        <span className={styles.userName}>{application.user.name}</span>
                     </div>
                     <div className={styles.sumBlock}>
                         <span className={styles.sumLabel}>Сумма:</span>
-                        <span className={styles.sumValue}>{application.sum}</span>
+                        <span className={styles.sumValue}>{application.totalAmount}</span>
                     </div>
                 </div>
             </div>
@@ -190,7 +195,9 @@ const ApplicationsSearchBottomSheet: React.FC<ApplicationsSearchBottomSheetProps
                     </div>
                     <div className={styles.results}>
                         {renderEmptyState()}
-                        {localSearchQuery && filteredApplications.length > 0 && filteredApplications.map(renderCard)}
+                        {localSearchQuery && filteredApplications.length > 0 && 
+                            filteredApplications.map((application, index) => renderCard(application, index))
+                        }
                     </div>
                 </div>
             </div>

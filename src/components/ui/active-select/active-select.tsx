@@ -23,9 +23,12 @@ const ActiveSelect: React.FC<ActiveSelectProps> = ({
   onOptionChange,
   type,
 }) => {
+  // console.log(type, 26)
   const handleCheckboxChange = (id: string) => {
     const updatedOptions = options.map(option => 
-      option.id === id ? { ...option, checked: !option.checked } : option
+      option.id === id 
+        ? { ...option, checked: !option.checked } 
+        : option
     );
     onOptionChange(updatedOptions);
   };

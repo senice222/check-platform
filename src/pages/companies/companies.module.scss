@@ -22,7 +22,7 @@
         border: 1px solid #DEE0E3;
         border-radius: 10px;
         overflow: hidden;
-        min-width: 1000px;
+        min-width: 100%;
 
         .searchWrapper {
             display: flex;
@@ -102,7 +102,7 @@
 
 @media (max-width: 768px) {
     .clients {
-        padding: 16px;
+        // padding: 16px;
 
         .clients_header {
             margin-bottom: 16px;
@@ -114,9 +114,9 @@
 
         .tableContainer {
             overflow-x: auto;
-            position: absolute;
+            // position: absolute;
             left: 0;
-            width: 100vw;
+            width: 100%;
             border-radius: 0;
             border-left: none;
             border-right: none;
@@ -265,7 +265,7 @@
 
 @media screen and (max-width: 600px) {
     .clients {
-        padding: 16px;
+        // padding: 16px;
 
         .clients_header {
             margin-bottom: 16px;
@@ -282,9 +282,9 @@
 
     .tableContainer {
         &[data-view-mode='table'] {
-            position: absolute;
+            // position: absolute;
             left: 0;
-            width: 100vw;
+            width: 100%;
             border-radius: 0;
             border-left: none;
             border-right: none;

@@ -11,6 +11,9 @@ import SellersSection from '../pages/settings/components/sellers-section/sellers
 import AccessSection from '../pages/settings/components/access-section/access-section';
 import { NotificationProvider } from '../contexts/NotificationContext/NotificationContext';
 import ClientMain from '../pages/client-main/client-main';
+import ClientLogin from '../pages/client-login/client-login';
+import ProtectedClientRoute from '../components/protected-route/client-route';
+import ClientLayout from '../layouts/client-layout/client-layout';
 const AdminLogin = lazy(() => import('../pages/admin-login/admin-login'));
 const PanelLayout = lazy(() => import('../layouts/panel-layout/panel-layout'));
 const ActiveApplications = lazy(() => import('../components/active-applications/active-applications'));
@@ -23,8 +26,22 @@ const router = createBrowserRouter([
       element: <AdminLogin />,
    },
    {
-      path: "client-main",
-      element: <ClientMain />,
+      path: "/client/login/:key",
+      element: <ClientLogin />,
+   },
+   {
+      path: "/client",
+      element: <ClientLayout />,
+      children: [
+         {
+            path: "main",
+            element: <ClientMain />
+         }
+      ]
+   },
+   {
+      path: "/",
+      element: <Navigate to="/admin/login" replace />,
    },
    {
       path: "/admin",

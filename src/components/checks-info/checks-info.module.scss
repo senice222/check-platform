@@ -2,6 +2,14 @@
   width: 100%;
   margin-top: 25px;
   
+  &.applicationMode {
+    .checkInfoListDesktop .item,
+    .checkInfoListMobile .mobileItem {
+      background: transparent;
+      border: 1px solid #DEE0E3;
+    }
+  }
+  
   .titleDiv {
     display: flex;
     justify-content: space-between;
@@ -81,6 +89,33 @@
           color: #14151a;
           font-weight: 500;
           font-size: 14px;
+        }
+      }
+
+      .addCheckButton {
+        margin-top: 16px;
+        width: 100%;
+        height: 40px;
+        background: #0A0F290A;
+        border-radius: 12px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: .2s;
+        font-size: 14px;
+        color: #14151A;
+        
+        svg {
+          path {
+            stroke: #14151A;
+          }
+        }
+        
+        &:hover {
+          background: rgba(10, 15, 41, 0.08);
         }
       }
     }

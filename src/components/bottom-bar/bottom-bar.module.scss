@@ -24,10 +24,42 @@
         color: #6E6D7A;
     }
 
-    &:last-child {
-        svg path {
-            fill: #6E6D7A;
+    svg path {
+        fill: #6E6D7A;
+    }
+
+    &.active {
+        span {
+            color: #924FE8;
         }
+
+        svg path {
+            fill: #924FE8;
+        }
+    }
+
+    .iconWrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #FDEAD8;
+        color: #AE590A;
+        font-size: 12px;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 6px;
+        border: 1px solid #0a0f2914;
     }
 }
 

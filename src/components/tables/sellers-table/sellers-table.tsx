@@ -6,13 +6,14 @@ import SearchBottomSheet from '../../modals/search-bottom-sheet/search-bottom-sh
 import Select from '../../ui/select/select';
 import AddSellerModal from '../../modals/add-seller-modal/add-seller-modal';
 import { mockData } from '../../../pages/settings/settings';
+import Loader from '../../ui/loader/loader';
 
 interface SellerData {
   id: string;
   name: string;
   inn: string;
-  type: 'elite' | 'white';
-  dateAdded: string;
+  type: 'white' | 'elit';
+  createdAt: string;
   applicationsCount: number;
   telegram: string;
 }
@@ -25,7 +26,11 @@ interface SellersTableProps {
   selectedTypes: ('elite' | 'white')[];
   setSelectedTypes: (types: ('elite' | 'white')[]) => void;
   openAddSellerModal: () => void;
-  setIsEditing: (isEditing: typeof mockData[0] | false) => void;
+  setIsEditing: (isEditing: any) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  isLoading: boolean;
+  onDeleteSeller: (seller: SellerData) => void;
 }
 
 const SellersTable: React.FC<SellersTableProps> = ({
@@ -36,10 +41,13 @@ const SellersTable: React.FC<SellersTableProps> = ({
   selectedTypes,
   setSelectedTypes,
   openAddSellerModal,
-  setIsEditing
+  setIsEditing,
+  searchQuery,
+  setSearchQuery,
+  isLoading,
+  onDeleteSeller
 }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const typeOptions = [
@@ -90,7 +98,7 @@ const SellersTable: React.FC<SellersTableProps> = ({
     {
       id: 'delete',
       label: 'Удалить компанию',
-      onClick: () => console.log('Удалить', row.id),
+      onClick: () => onDeleteSeller(row),
       color: '#E6483D'
     }
   ];
@@ -118,7 +126,7 @@ const SellersTable: React.FC<SellersTableProps> = ({
           </div>
           <div className={styles.infoItem}>
             <span className={styles.label}>Дата добавления</span>
-            <span className={styles.value}>{item.dateAdded}</span>
+            <span className={styles.value}>{formatDate(item.createdAt)}</span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.label}>Указана в заявках</span>
@@ -158,6 +166,23 @@ const SellersTable: React.FC<SellersTableProps> = ({
     return seller.name.toLowerCase().includes(query) || 
            seller.inn.toLowerCase().includes(query);
   };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+  };
+
+  // if (isLoading) {
+  //   return (
+  //     <div className={styles.loaderContainer}>
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -220,33 +245,49 @@ const SellersTable: React.FC<SellersTableProps> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <div className={styles.companyDiv}>
-                    <span className={`${styles.companyName} ${item.type === 'elite' ? styles.elite : ''}`}>
-                      {item.name}
-                    </span>
-                    <span className={styles.inn}>ИНН {item.inn}</span>
+            {isLoading ? (
+              <tr>
+                <td colSpan={5}>
+                  <div className={styles.loaderContainer}>
+                    <Loader />
                   </div>
                 </td>
-                <td>
-                  <span className={`${styles.typeBadge} ${styles[item.type]}`}>
-                    {item.type === 'elite' ? 'Элитная' : 'Белая'}
-                  </span>
-                </td>
-                <td>{item.dateAdded}</td>
-                <td>{item.applicationsCount}</td>
-                <td>
-                  <RowMenu options={getRowMenuOptions(item)} />
-                </td>
               </tr>
-            ))}
+            ) : (
+              filteredData.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <div className={styles.companyDiv}>
+                      <span className={`${styles.companyName} ${item.type === 'elite' ? styles.elite : ''}`}>
+                        {item.name}
+                      </span>
+                      <span className={styles.inn}>ИНН {item.inn}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className={`${styles.typeBadge} ${styles[item.type]}`}>
+                      {item.type === 'elite' ? 'Элитная' : 'Белая'}
+                    </span>
+                  </td>
+                  <td>{formatDate(item.createdAt)}</td>
+                  <td>{item.applicationsCount}</td>
+                  <td>
+                    <RowMenu options={getRowMenuOptions(item)} />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
 
         <div className={styles.cardsContainer} data-view-mode={viewMode}>
-          {filteredData.map(renderCard)}
+          {isLoading ? (
+            <div className={styles.loaderContainer}>
+              <Loader />
+            </div>
+          ) : (
+            filteredData.map(renderCard)
+          )}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DownloadSvg } from '../../components/svgs/svgs';
+import { DownloadSvg, Plus } from '../../components/svgs/svgs';
 import Button from '../../components/ui/button/button';
 import s from './checks-info.module.scss';
 
@@ -8,27 +8,20 @@ interface ChecksInfoProps {
   checksCount: number;
   sumWithVat: string;
   vat: string;
+  onAddCheck: () => void;
+  isApplicationMode?: boolean;
 }
 
 const ChecksInfo: React.FC<ChecksInfoProps> = ({
   dates,
   checksCount,
   sumWithVat,
-  vat
+  vat,
+  onAddCheck,
+  isApplicationMode = false
 }) => {
   return (
-    <div className={s.checks}>
-      <div className={s.titleDiv}>
-        <h1 className={s.title}>Чеки</h1>
-        <Button
-          icon={<DownloadSvg />}
-          variant="purple"
-          styleLabel={{ fontSize: "14px" }}
-          label="Экспортировать в XLS"
-          style={{ width: "200px", height: "32px" }}
-        />
-      </div>
-      
+    <div className={`${s.checks} ${isApplicationMode ? s.applicationMode : ''}`}>
       {/* Десктопная версия */}
       <div className={s.checkInfoListDesktop}>
         <div className={s.item}>
@@ -68,6 +61,10 @@ const ChecksInfo: React.FC<ChecksInfoProps> = ({
             <div className={s.label}>НДС 20%:</div>
             <div className={s.value}>{vat}</div>
           </div>
+          <button className={s.addCheckButton} onClick={onAddCheck}>
+            <Plus />
+            Добавить чек
+          </button>
         </div>
       </div>
     </div>

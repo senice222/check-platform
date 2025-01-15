@@ -21,7 +21,7 @@
 .searchWrapper {
    display: flex;
    align-items: center;
-   border: 1px solid #DEE0E3;
+  //  border: 1px solid #DEE0E3;
    border-bottom: none;
    border-radius: 5px 5px 0 0;
    padding-left: 16px;
@@ -208,9 +208,10 @@
 }
 
 .sum {
-   color: #14151A;
-   font-size: 14px;
    font-weight: 500;
+   color: #14151A;
+   text-align: right;
+   font-variant-numeric: tabular-nums;
 }
 
 .viewToggle {
@@ -264,8 +265,13 @@
 .topElement {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
     flex-wrap: wrap;
+    .left {
+      display: flex;
+      gap: 3px;
+    }
 }
 
 .cardId {
@@ -386,7 +392,7 @@
   .container {
     // position: absolute;
     left: 0;
-    width: 100vw;
+    width: 100%;
     border-radius: 0;
     border-left: none;
     border-right: none;
@@ -422,7 +428,7 @@
   }
 
   .table {
-    min-width: 100vw;
+    min-width: 100%;
     border-left: none;
     border-right: none;
 
@@ -510,6 +516,82 @@
       color: #14151A;
       font-weight: 500;
       font-size: 14px;
+      font-variant-numeric: tabular-nums;
     }
+  }
+}
+
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #7B48EE;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.noData {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.sumValue {
+  font-weight: 500;
+  color: #14151A;
+  font-variant-numeric: tabular-nums;
+}
+
+.sumBlock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .sumLabel {
+    color: #0F132499;
+    font-size: 14px;
+  }
+
+  .sumValue {
+    color: #14151A;
+    font-weight: 500;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.statusGroup {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+
+  &.more {
+    background-color: #F7F7F8;
+    color: #0F132499;
   }
 }

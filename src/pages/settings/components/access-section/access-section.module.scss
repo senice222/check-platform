@@ -252,3 +252,15 @@
         margin-top: 16px;
     }
 }
+
+.tableLoader {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #dee0e3;
+}

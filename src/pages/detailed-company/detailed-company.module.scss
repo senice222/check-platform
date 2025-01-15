@@ -90,3 +90,214 @@
     }
   }
 } 
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 8px;
+  border: 1px solid #DEE0E3;
+
+  .cardHeader {
+    .topElement {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .leftSide {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .cardId {
+          font-weight: 500;
+          color: #14151A;
+        }
+
+        .date {
+          color: #14151A;
+        }
+      }
+    }
+  }
+
+  .cardBody {
+    .buyerSellerRow {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 12px;
+
+      .buyerBlock, .sellerBlock {
+        flex: 1;
+
+        .cardLabel {
+          display: block;
+          color: #0F132499;
+          font-size: 14px;
+          margin-bottom: 4px;
+        }
+
+        .companyName {
+          display: block;
+          color: #924FE8;
+          font-weight: 500;
+          font-size: 14px;
+          text-decoration: underline;
+          margin-bottom: 2px;
+        }
+
+        .sellerName {
+          display: block;
+          font-weight: 500;
+          font-size: 14px;
+          text-decoration: underline;
+          margin-bottom: 2px;
+
+          &.regular {
+            color: #AE590A;
+          }
+
+          &.elite {
+            color: #924FE8;
+          }
+        }
+
+        .inn {
+          color: #0F132499;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .productRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .productName {
+        font-weight: 500;
+        color: #14151A;
+      }
+
+      .quantityBlock {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+
+        .quantity {
+          color: #14151A;
+          font-weight: 500;
+        }
+
+        .unit {
+          color: #0F132499;
+        }
+      }
+    }
+
+    .priceRows {
+      .priceRow {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .priceLabel {
+          color: #0F132499;
+          font-size: 14px;
+        }
+
+        .priceValue {
+          color: #14151A;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+} 
+
+.searchCard {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 8px;
+  border: 1px solid #DEE0E3;
+
+  .cardBody {
+    .cardHeader {
+      margin-bottom: 16px;
+
+      .idAndDate {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .id {
+          font-weight: 500;
+          color: #14151A;
+        }
+
+        .date {
+          color: #14151A;
+        }
+      }
+    }
+
+    .mainInfo {
+      margin-bottom: 16px;
+
+      .infoRow {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+
+        .label {
+          color: #0F132499;
+          font-size: 14px;
+        }
+
+        .value {
+          color: #14151A;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .parties {
+      .party {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .label {
+          color: #0F132499;
+          font-size: 14px;
+        }
+
+        .name {
+          font-weight: 500;
+          font-size: 14px;
+          text-decoration: underline;
+
+          &.elite {
+            color: #924FE8;
+          }
+
+          &.regular {
+            color: #AE590A;
+          }
+        }
+
+        .inn {
+          color: #0F132499;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+} 

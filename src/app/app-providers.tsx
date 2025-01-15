@@ -1,7 +1,14 @@
-import { FC, ReactNode } from "react";
-import { ReactQueryProvider } from "../providers/react-query-provider";
-import { NotificationProvider } from "../contexts/NotificationContext/NotificationContext";
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
-export const AppProviders: FC<{ children: ReactNode }> = ({ children }) => (
-   <ReactQueryProvider><NotificationProvider>{children}</NotificationProvider></ReactQueryProvider>
-);
+interface Props {
+    children: React.ReactNode;
+}
+
+export const AppProviders = ({ children }: Props) => {
+    return (
+        <Provider store={store}>
+            {children}
+        </Provider>
+    );
+};

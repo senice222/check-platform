@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import styles from './access-table.module.scss';
 import { TableIcon, CardIcon, SearchIcon } from '../../svgs/svgs';
 import SearchBottomSheet from '../../modals/search-bottom-sheet/search-bottom-sheet';
@@ -7,8 +7,10 @@ import RowMenu from '../../ui/row-menu/row-menu';
 
 interface AccessTableProps {
   data: Array<{
-    id: number;
+    id: string | number;
     name: string;
+    login: string;
+    password: string;
     registrationDate: string;
   }>;
   searchQuery: string;
@@ -21,12 +23,80 @@ interface AccessTableProps {
   }>;
 }
 
-const AccessTable: React.FC<AccessTableProps> = ({
-  data,
-  searchQuery,
-  onSearchChange,
-  getRowMenuOptions
-}) => {
+interface TableRowProps {
+  item: {
+    id: string | number;
+    name: string;
+    login: string;
+    password: string;
+    registrationDate: string;
+  };
+  getRowMenuOptions: (row: any) => Array<{
+    id: string;
+    label: string;
+    onClick: () => void;
+    color?: string;
+  }>;
+}
+
+const TableRow = memo(({ item, getRowMenuOptions }: TableRowProps) => {
+  return (
+    <tr>
+      <td>
+        <div className={styles.userCell}>
+          <DetailedAvatar />
+          <div className={styles.userInfo}>
+            <span className={styles.userName}>{item.name}</span>
+            <span className={styles.userLogin}>{item.login}</span>
+          </div>
+        </div>
+      </td>
+      <td>{item.registrationDate}</td>
+      <td>
+        <RowMenu options={getRowMenuOptions(item)} />
+      </td>
+    </tr>
+  );
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.item.name === nextProps.item.name &&
+    prevProps.item.login === nextProps.item.login &&
+    prevProps.item.registrationDate === nextProps.item.registrationDate
+  );
+});
+
+const CardItem = memo(({ item, getRowMenuOptions }: TableRowProps) => {
+  return (
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <div className={styles.userInfo}>
+          <DetailedAvatar />
+          <div className={styles.userDetails}>
+            <span className={styles.userName}>{item.name}</span>
+            <span className={styles.userLogin}>{item.login}</span>
+          </div>
+        </div>
+        <div className={styles.cardActions}>
+          <RowMenu options={getRowMenuOptions(item)} />
+        </div>
+      </div>
+      <div className={styles.cardBody}>
+        <div className={styles.infoRow}>
+          <span className={styles.label}>Дата регистрации:</span>
+          <span className={styles.value}>{item.registrationDate}</span>
+        </div>
+      </div>
+    </div>
+  );
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.item.name === nextProps.item.name &&
+    prevProps.item.login === nextProps.item.login &&
+    prevProps.item.registrationDate === nextProps.item.registrationDate
+  );
+});
+
+const AccessTable: React.FC<AccessTableProps> = memo(({ data, searchQuery, onSearchChange, getRowMenuOptions }) => {
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [isMobile, setIsMobile] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -48,6 +118,7 @@ const AccessTable: React.FC<AccessTableProps> = ({
           <DetailedAvatar />
           <div className={styles.userDetails}>
             <span className={styles.userName}>{item.name}</span>
+            <span className={styles.userLogin}>{item.login}</span>
           </div>
         </div>
         <div className={styles.cardActions}>
@@ -115,24 +186,23 @@ const AccessTable: React.FC<AccessTableProps> = ({
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <div className={styles.userCell}>
-                    <DetailedAvatar />
-                    <span className={styles.userName}>{item.name}</span>
-                  </div>
-                </td>
-                <td>{item.registrationDate}</td>
-                <td>
-                  <RowMenu options={getRowMenuOptions(item)} />
-                </td>
-              </tr>
+              <TableRow 
+                key={item.id} 
+                item={item} 
+                getRowMenuOptions={getRowMenuOptions}
+              />
             ))}
           </tbody>
         </table>
 
         <div className={styles.cardsContainer} data-view-mode={viewMode}>
-          {data.map(renderCard)}
+          {data.map((item) => (
+            <CardItem 
+              key={item.id} 
+              item={item} 
+              getRowMenuOptions={getRowMenuOptions}
+            />
+          ))}
         </div>
       </div>
 
@@ -155,6 +225,6 @@ const AccessTable: React.FC<AccessTableProps> = ({
       />
     </>
   );
-};
+});
 
 export default AccessTable; 

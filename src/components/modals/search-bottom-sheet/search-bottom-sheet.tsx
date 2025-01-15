@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import styles from './search-bottom-sheet.module.scss';
 import { SearchIcon, SearchIcon2 } from '../../svgs/svgs';
+// import RowMenu from '../../ui/row-menu/row-menu';
 
 interface SearchBottomSheetProps<T> {
   isOpen: boolean;
@@ -62,8 +63,14 @@ const SearchBottomSheet = <T,>({
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    setStartY(e.touches[0].clientY);
-    setIsDragging(true);
+    const touchArea = sheetRef.current?.querySelector(`.${styles.header}`);
+    const touch = e.touches[0];
+    const touchTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (touchArea?.contains(touchTarget)) {
+      setStartY(touch.clientY);
+      setIsDragging(true);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {

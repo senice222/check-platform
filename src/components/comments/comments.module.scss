@@ -47,10 +47,13 @@
       height: 100%;
     }
     .inputContainer {
+      position: relative;
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
       height: 60px;
       width: 100%;
       display: flex;
-      gap: 10px;
       user-select: none;
       justify-content: space-between;
       align-items: flex-end;
@@ -71,17 +74,74 @@
         }
         .send {
           cursor: pointer;
+          opacity: 0.8;
+          transition: opacity 0.2s;
+
+          &:hover {
+              opacity: 1;
+          }
+
+          &.disabled {
+              opacity: 0.4;
+              cursor: not-allowed;
+          }
         }
       }
     }
     .attachDiv {
-      border: 1px solid #dee0e3;
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border: 1px solid #DEE0E3;
       border-radius: 12px;
       width: 40px;
       height: 40px;
-      display: flex;
       justify-content: center;
-      align-items: center;
+
+      &:hover {
+          background-color: #F4F5F6;
+      }
+
+      .attachedFile {
+          position: absolute;
+          left: 0;
+          // transform: translateX(-10%);
+          bottom: calc(100% + 8px);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: #F4F5F6;
+          padding: 4px 12px;
+          border-radius: 6px;
+          max-width: 200px;
+          white-space: nowrap;
+
+          .fileName {
+              font-size: 12px;
+              color: #14151A;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+          }
+
+          .removeFile {
+              cursor: pointer;
+              opacity: 0.6;
+              transition: opacity 0.2s;
+              display: flex;
+              align-items: center;
+
+              &:hover {
+                  opacity: 1;
+              }
+
+              svg {
+                  width: 12px;
+                  height: 12px;
+              }
+          }
+      }
     }
   }
   .hiddenComments {
@@ -141,11 +201,18 @@
             gap: 15px;
             .file {
                 border-radius: 12px;
-                // margin-top: 8px;
                 border: 1px solid #DEE0E3;
                 padding: 12px;
                 min-width: 248px;
                 display: flex;
+                align-items: center;
+
+                svg {
+                    width: 24px;
+                    height: 24px;
+                    transition: fill 0.2s;
+                }
+
                 .rightInfo {
                     margin-left: 15px;
                     .fileName {
@@ -185,4 +252,45 @@
       min-width: auto !important;
       width: 100% !important;
     }
+  }
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    color: #0F132499;
+  }
+  .deleteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+  }
+  .fileName {
+    font-size: 12px;
+    color: #0F132499;
+    margin-left: 0 !important;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .attachDiv {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   }

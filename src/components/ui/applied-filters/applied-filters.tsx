@@ -12,6 +12,7 @@ interface AppliedFiltersProps {
   sumFilter?: { from: string; to: string };
   onRemoveFilter: (type: string) => void;
   onRemoveDateFilter?: () => void;
+  hideCompanyFilterDisplay?: boolean;
 }
 
 const AppliedFilters: React.FC<AppliedFiltersProps> = ({
@@ -22,7 +23,8 @@ const AppliedFilters: React.FC<AppliedFiltersProps> = ({
   statusFilters,
   sumFilter,
   onRemoveFilter,
-  onRemoveDateFilter
+  onRemoveDateFilter,
+  hideCompanyFilterDisplay = false
 }) => {
   const truncateText = (text: string, maxLength: number = 15) => {
     if (text.length <= maxLength) return text;
@@ -34,6 +36,7 @@ const AppliedFilters: React.FC<AppliedFiltersProps> = ({
   };
 
   const renderFilterItem = (type: string, values: string[]) => {
+    if (type === 'company' && hideCompanyFilterDisplay) return null;
     if (values.length === 0) return null;
 
     let label = '';

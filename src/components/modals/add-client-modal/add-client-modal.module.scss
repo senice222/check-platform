@@ -68,24 +68,58 @@
         margin-top: 15px;
         flex-direction: column;
         gap: 10px;
+
         .text {
             font-size: 14px;
             font-weight: 500;
             color: #14151A;
         }
+
         .link {
             width: 100%;
             display: flex;
             border: 1px solid #DEE0E3;
             border-radius: 12px;
-            // padding: 10px 12px;
             height: 40px;
-            display: flex;
             padding-left: 12px;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+
+            .link-wrapper {
+                flex: 1;
+                overflow-x: auto;
+                padding-right: 8px;
+                
+                &::-webkit-scrollbar {
+                    height: 4px;
+                }
+                
+                &::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 2px;
+                }
+                
+                &::-webkit-scrollbar-thumb {
+                    background: #DEE0E3;
+                    border-radius: 2px;
+                }
+                
+                &::-webkit-scrollbar-thumb:hover {
+                    background: #cdcfd3;
+                }
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: #14151A;
+                white-space: nowrap;
+                min-width: min-content;
+            }
+
             .copy {
-                width: 120px;
+                min-width: 120px;
                 height: 100%;
                 display: flex;
                 justify-content: center;
@@ -95,11 +129,8 @@
                 font-size: 14px;
                 font-weight: 500;
                 color: #14151A;
-            }
-            p {
-                font-size: 14px;
-                font-weight: 400;
-                color: #14151A;
+                white-space: nowrap;
+                background: white;
             }
         }
     }

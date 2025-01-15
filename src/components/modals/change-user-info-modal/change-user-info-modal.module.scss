@@ -13,6 +13,12 @@
     }
     
 }
+.checkboxContainer {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    font-size: 14px;
+}
 .content {
     margin-top: 20px;
     .gratText {
